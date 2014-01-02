@@ -1,0 +1,10 @@
+//
+// Prefix header for all source files of the 'Puissant' target in the 'Puissant' project
+//
+
+#ifdef __OBJC__
+	#import <Cocoa/Cocoa.h>
+	#import "PSTConstants.h"
+	#import <ReactiveCocoa/ReactiveCocoa.h>
+	#import <ReactiveCocoa/EXTScope.h>
+#endif

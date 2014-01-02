@@ -1,0 +1,12 @@
+//
+// Prefix header for all source files of the 'PuissantTests' target in the 'PuissantTests' project
+//
+
+#ifdef __OBJC__
+	#import <Cocoa/Cocoa.h>
+	#import <XCTest/XCTest.h>
+	#import <Puissant/Puissant.h>
+	#define EXP_SHORTHAND
+	#import "Specta.h"
+	#import "Expecta.h"
+#endif

@@ -68,8 +68,8 @@ static NSString *PSTComposerCSSURL = nil;
 }
 
 + (NSString *)emptyMessageHTML {
-	return [[[PSTMustacheTemplate alloc] initWithFilename:@"new_message" inFolder:@"" values:@{ @"COMPOSER_COMPILED_JS_URL" : PSTComposerJSURL,
-																							   @"MESSAGE_EDITING_CSS_URL" : PSTComposerCSSURL,
+	return [[[PSTMustacheTemplate alloc] initWithFilename:@"new_message" inFolder:@"" values:@{ @"COMPOSER_JS_URL" : PSTComposerJSURL,
+																							   @"COMPOSER_CSS_URL" : PSTComposerCSSURL,
 																							 }] render];
 }
 

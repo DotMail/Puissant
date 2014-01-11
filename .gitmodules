@@ -4,15 +4,15 @@
 [submodule "External/FMDB"]
 	path = External/FMDB
 	url = https://github.com/ccgus/fmdb.git
-[submodule "External/GRMustache"]
-	path = External/GRMustache
-	url = https://github.com/groue/GRMustache.git
-[submodule "External/Specta"]
-	path = External/Specta
-	url = https://github.com/specta/specta.git
 [submodule "External/Expecta"]
 	path = External/Expecta
 	url = https://github.com/specta/expecta.git
 [submodule "External/ReactiveCocoa"]
 	path = External/ReactiveCocoa
 	url = https://github.com/ReactiveCocoa/ReactiveCocoa.git
+[submodule "External/Specta"]
+	path = External/Specta
+	url = https://github.com/specta/specta.git
+[submodule "External/GRMustache"]
+	path = External/GRMustache
+	url = https://github.com/groue/GRMustache.git

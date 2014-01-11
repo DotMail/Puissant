@@ -427,7 +427,7 @@
 					[allUIDsToRemove addIndex:msg.uid];
 				}];
 				if (allUIDsToRemove.count != 0) {
-					[[self.session copyMessagesOperationWithFolder:self.folder.path uids:allUIDsToRemove destFolder:self.parentSynchronizer.trashFolder.path]start:^(NSError *error, MCOIndexSet *destUids) {
+					[[self.session copyMessagesOperationWithFolder:self.folder.path uids:allUIDsToRemove destFolder:self.parentSynchronizer.trashFolder.path]start:^(NSError *error, NSDictionary *destUids) {
 						[[self.session storeFlagsOperationWithFolder:self.folder.path uids:allUIDsToRemove kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted]start:^(NSError *error) { }];
 					}];
 				}

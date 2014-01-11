@@ -648,23 +648,21 @@ static NSArray *PSTPathsForMessages(NSArray *messages);
 			}
 			[PSTActivityManager.sharedManager removeActivity:self.foldersRequestActivity];
 			self.foldersRequestActivity = nil;
-			if (!error && !_synchronizerFlags.hasNamespace) {
-				self.xListMapping = [[MCOIMAPSession XListMappingWithFolders:folders] copy];
-				[self _setupFolders];
-				if (self.xListMapping.count != 0) {
-					[self.delegate accountSynchronizerDidUpdateXListMapping:self];
-				}				
-				folders = [folders arrayByAddingObject:[self.session inboxFolder]];
-				
-				[self _setFromFolders:folders];
-				[[self.databaseController serializeFolders:folders] start:^{
+			self.xListMapping = [[MCOIMAPSession XListMappingWithFolders:folders] copy];
+			[self _setupFolders];
+			if (self.xListMapping.count != 0) {
+				[self.delegate accountSynchronizerDidUpdateXListMapping:self];
+			}				
+			folders = [folders arrayByAddingObject:[self.session inboxFolder]];
+			
+			[self _setFromFolders:folders];
+			[[self.databaseController serializeFolders:folders] start:^{
+				@strongify(self);
+				dispatch_async(dispatch_get_main_queue(), ^{
 					@strongify(self);
-					dispatch_async(dispatch_get_main_queue(), ^{
-						@strongify(self);
-						[self _storeFoldersDone];
-					});
-				}];
-			}
+					[self _storeFoldersDone];
+				});
+			}];
 			[subscriber sendNext:nil];
 			[subscriber sendCompleted];
 		}];
@@ -788,50 +786,47 @@ static NSArray *PSTPathsForMessages(NSArray *messages);
 	@weakify(self);
 	[self.conversationsOperation start:^(NSArray *conversations) {
 		@strongify(self);
-		PSTPropogateValueForKey(self.currentConversations, {
-			if (!self.isSelectedStarred) {
-				self.currentConversations = nil;
-				NSMutableArray *newConversationsArray = [NSMutableArray array];
-				for (PSTConversation *conversation in conversations) {
-					if (![self.hiddenConversations containsIndex:conversation.conversationID]) {
-						[newConversationsArray addObject:conversation];
-						[conversation setStorage:self.databaseController];
-					}
+		if (!self.isSelectedStarred) {
+			NSMutableArray *newConversationsArray = [NSMutableArray array];
+			for (PSTConversation *conversation in conversations) {
+				if (![self.hiddenConversations containsIndex:conversation.conversationID]) {
+					[newConversationsArray addObject:conversation];
+					[conversation setStorage:self.databaseController];
 				}
-				self.currentConversations = newConversationsArray;
-				[self didChangeValueForKey:@"currentConversations"];
-				PSTLog(@"request conversation done: %lu messages", self.currentConversations.count);
-				[PSTActivityManager.sharedManager removeActivity:self.loadActivity];
-				self.loadActivity = nil;
-				_synchronizerFlags.fullConversationLoadAfterPartial = NO;
-				if (self.conversationsOperation.limit != 0) {
-					[self _requestConversationFromStorageWithLimit:0 fullLoadAfterPartial:YES];
-				}
-				self.loading = NO;
-				return;
+			}
+			[self willChangeValueForKey:@"currentConversations"];
+			self.currentConversations = newConversationsArray;
+			[self didChangeValueForKey:@"currentConversations"];
+			PSTLog(@"request conversation done: %lu messages", self.currentConversations.count);
+			[PSTActivityManager.sharedManager removeActivity:self.loadActivity];
+			self.loadActivity = nil;
+			_synchronizerFlags.fullConversationLoadAfterPartial = NO;
+			if (self.conversationsOperation.limit != 0) {
+				[self _requestConversationFromStorageWithLimit:0 fullLoadAfterPartial:YES];
 			}
 			self.loading = NO;
-			if (self.selectedFolder != nil) {
-				[[self.databaseController attachmentsForFolder:self.selectedFolder]start:^(NSArray *attachments) {
-					@strongify(self);
-					[self.attachmentsSubject sendNext:attachments];
-				}];
-			} else {
-				[[self.databaseController attachmentsOperationNotInTrashFolder:self.trashFolder orAllMailFolder:self.allMailFolder]start:^(NSArray *attachments) {
-					@strongify(self);
-					[self.attachmentsSubject sendNext:attachments];
-				}];
-			}
-			[[self.databaseController facebookNotificationsOperationNotInTrashFolder:self.inboxFolder] start:^(NSArray *conversations) {
+		}
+		self.loading = NO;
+		if (self.selectedFolder != nil) {
+			[[self.databaseController attachmentsForFolder:self.selectedFolder]start:^(NSArray *attachments) {
 				@strongify(self);
-				[self.facebookSubject sendNext:conversations];
+				[self.attachmentsSubject sendNext:attachments];
 			}];
-			
-			[[self.databaseController twitterNotificationsOperationNotInTrashFolder:self.inboxFolder] start:^(NSArray *conversations) {
+		} else {
+			[[self.databaseController attachmentsOperationNotInTrashFolder:self.trashFolder orAllMailFolder:self.allMailFolder]start:^(NSArray *attachments) {
 				@strongify(self);
-				[self.twitterSubject sendNext:conversations];
+				[self.attachmentsSubject sendNext:attachments];
 			}];
-		});
+		}
+		[[self.databaseController facebookNotificationsOperationNotInTrashFolder:self.inboxFolder] start:^(NSArray *conversations) {
+			@strongify(self);
+			[self.facebookSubject sendNext:conversations];
+		}];
+		
+		[[self.databaseController twitterNotificationsOperationNotInTrashFolder:self.inboxFolder] start:^(NSArray *conversations) {
+			@strongify(self);
+			[self.twitterSubject sendNext:conversations];
+		}];
 	}];
 }
 

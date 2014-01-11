@@ -19,9 +19,9 @@ NSString *const PSTSpamFolderPathKey = @"PSTSpamFolderPathKey";
 
 + (NSString *)defaultHTMLSignatureSuffix { return nil; }
 - (id)initWithDictionary:(NSDictionary *)dictionary {
-	if (dictionary[@"IMAPService"]){
+	if (dictionary[@"PSTIMAPService"]){
 		return self = [[PSTIMAPMailAccount alloc]initWithDictionary:dictionary];
-	} else if (dictionary[@"POPService"]){
+	} else if (dictionary[@"PSTPOPService"]){
 		return self = [[PSTPOPMailAccount alloc]initWithDictionary:dictionary];
 	}
 	

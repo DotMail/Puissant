@@ -184,8 +184,6 @@ static NSArray *PSTIgnoredMailboxesArray = nil;
 }
 
 - (void)dealloc {
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_syncSyncDatesNow) object:nil];
-	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 	if (_imapSynchronizer) {
 		[_imapSynchronizer removeObserver:self forKeyPath:@"error"];
 		[_imapSynchronizer removeObserver:self forKeyPath:@"committing"];
@@ -241,7 +239,8 @@ static NSArray *PSTIgnoredMailboxesArray = nil;
 	if (_accountFlags.waitingUntilAllOperationsHaveFinished) {
 		return;
 	}
-	PSTPropogateValueForKey(keyPath, { });
+	[super willChangeValueForKey:keyPath];
+	[super didChangeValueForKey:keyPath];
 }
 
 #pragma mark - Synchronization

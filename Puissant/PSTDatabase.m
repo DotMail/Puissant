@@ -40,15 +40,15 @@ static NSArray *statements = nil;
 
 #ifdef DEBUG
 #define PUISSANT_FMDB_ERROR_LOG \
-if ([self.database hadError]) { \
-PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.database lastErrorMessage]); \
+if ([self.connection hadError]) { \
+PSTLog(@"%d: PSTMessageDatabase error %d: %@", __LINE__, [self.connection lastErrorCode], [self.connection lastErrorMessage]); \
 }
 #else 
 #define PUISSANT_FMDB_ERROR_LOG 
 #endif 
 
 @interface PSTDatabase ()
-@property (atomic, strong) FMDatabase *database;
+@property (atomic, strong) FMDatabase *connection;
 
 @property (atomic, strong) PSTIndexedMapTable *conversationsCache;
 @property (atomic, strong) PSTIndexedMapTable *messagesCache;
@@ -100,17 +100,15 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 	if (self == PSTDatabase.class) {
 		if (statements == nil) {
 			statements = @[
-				@"create index attachment_message_index on attachment (message_id);",
-				@"create index attachment_part_id_index on attachment (message_id, part_id);",
-				@"create index attachment_contents_index on attachment (folder_idx, has_contents);",
 				@"create table mailbox (path text, uidvalidity number, unseen_count number, count number, oldest_uid number);",
 				@"create index path_index on mailbox(path);",
 				@"create table message (uid number, msgid text, folder_idx number, date date, flags number, original_flags number, conversation_id number, flags_dirty number, deleted number, is_flagged number, is_read number, is_deleted number, is_notified number, is_local number, is_facebook number, is_twitter number);",
 				@"create index message_uid_index on message (uid, folder_idx);",
 				@"create index message_msgid_index on message (msgid);",
 				@"create index message_conversation_id_index on message (conversation_id);",
+				@"create index message_read_idx on message (folder_idx, is_read);",
 				@"create index message_flags_idx on message (folder_idx, is_flagged, is_read, is_deleted);",
-				@"create table message_thread_id_index (thread_id number, msgid text);",
+				@"create table message_relation (thread_id number, msgid text);",
 				@"create table conversation_thread_id (thread_id number, conversation_id number);",
 				@"create index conversation_thread_id_index on conversation_thread_id(thread_id);",
 				@"create table conversation (preview_subject text, subject text);",
@@ -119,6 +117,9 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 				@"create index conversation_data_folder_index on conversation_data (folder_idx, visible);",
 				@"create index conversation_data_conversation_id_idx on conversation_data (conversation_id);",
 				@"create table attachment (folder_idx number, message_id number, part_id text, filepath text, filename text, is_body_attachment number, contents blob, has_contents number, uid number);",
+				@"create index attachment_message_index on attachment (message_id);",
+				@"create index attachment_part_id_index on attachment (message_id, part_id);",
+				@"create index attachment_contents_index on attachment (folder_idx, has_contents);",
 			];
 		}
 	}
@@ -179,25 +180,25 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 	}
 	BOOL retval = YES;
 	NSString *messagesDBPath = [self.path stringByAppendingPathComponent:@"messages.db"];
-	self.database = [FMDatabase databaseWithPath:messagesDBPath];
+	self.connection = [FMDatabase databaseWithPath:messagesDBPath];
 	BOOL msgDatabaseExists = [[NSFileManager defaultManager]fileExistsAtPath:messagesDBPath];
-	if ([self.database open]) {
+	if ([self.connection open]) {
 		NSString *columnString = nil;
-		if ([self.database open]) {
-			FMResultSet *resultSet = [self.database executeQuery:@"PRAGMA journal_mode"];
+		if ([self.connection open]) {
+			FMResultSet *resultSet = [self.connection executeQuery:@"PRAGMA journal_mode"];
 			if ([resultSet next]) {
 				columnString = [[[resultSet stringForColumnIndex:0]lowercaseString]copy];
 			}
 			[resultSet close];
 			
 			if (![columnString isEqualToString:@"wal"]) {
-				FMResultSet *resultSet = [self.database executeQuery:@"PRAGMA journal_mode=WAL"];
+				FMResultSet *resultSet = [self.connection executeQuery:@"PRAGMA journal_mode=WAL"];
 				[resultSet close];
 			}
 			columnString = nil;
-			[self.database setShouldCacheStatements:YES];
-			[self.database executeUpdate:@"PRAGMA synchronous = NORMAL"];
-			[self.database executeUpdate:@"PRAGMA cache_size = 100"];
+			[self.connection setShouldCacheStatements:YES];
+			[self.connection executeUpdate:@"PRAGMA synchronous = NORMAL"];
+			[self.connection executeUpdate:@"PRAGMA cache_size = 100"];
 			
 			if (!msgDatabaseExists) {
 				if ([self _setupDatabase]) {
@@ -218,15 +219,15 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 		
 	}
 	NSAssert(nil, @"A Database was not created for this account");
-	[self.database close];
-	self.database = nil;
+	[self.connection close];
+	self.connection = nil;
 	retval = NO;
 	return retval;
 }
 
 - (void)openIndex {
 	_index = [[PSTMessageIndex alloc] init];
-	_index.database = _database;
+	_index.database = _connection;
 	_index.path = _path;
 	_index.delegate = self;
 	if ([_index openAndCheckConsistency]) {
@@ -236,7 +237,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 }
 
 - (BOOL)_setupDatabase {
-	[self.database executeUpdate:@"PRAGMA user_version = 1"];
+	[self.connection executeUpdate:@"PRAGMA user_version = 1"];
 	PUISSANT_FMDB_ERROR_LOG
 	[self _executeSQLArray:statements];
 	return YES;
@@ -244,8 +245,8 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 
 - (void)_executeSQLArray:(NSArray *)statements {
 	for (NSString *substring in statements) {
-		[self.database executeUpdate:substring];
-		if ([self.database hadError]) {
+		[self.connection executeUpdate:substring];
+		if ([self.connection hadError]) {
 			PSTLog(@"error executing substring: \n%@\n", substring);
 			PUISSANT_FMDB_ERROR_LOG
 		}
@@ -253,20 +254,20 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 }
 
 - (void)close {
-	[self.database close];
-	self.database = nil;
+	[self.connection close];
+	self.connection = nil;
 }
 
 
 - (void)beginTransaction {
-	[self.database beginTransaction];
+	[self.connection beginTransaction];
 	@synchronized(self) {
 		[self.decodedMessageCache beginTransaction];
 	}
 }
 
 - (void)commit {
-	[self.database commit];
+	[self.connection commit];
 	for (NSNumber *messageUID in self.pendingConversationCache) {
 		id conversation = [self.pendingConversationCache objectForKey:messageUID];
 		[self.conversationsCache setData:[NSKeyedArchiver archivedDataWithRootObject:conversation] forIndex:[messageUID longLongValue]];
@@ -290,7 +291,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 	NSMutableDictionary *cachedFolderIdentifiers = [NSMutableDictionary dictionary];
 	NSMutableDictionary *cachedFolderPaths = [NSMutableDictionary dictionary];
 	
-	FMResultSet *result = [self.database executeQuery:@"select rowid, path from mailbox"];
+	FMResultSet *result = [self.connection executeQuery:@"select rowid, path from mailbox"];
 	while ([result next]) {
 		[cachedFolderIdentifiers setObject:[NSNumber numberWithLongLong:[result longLongIntForColumn:@"rowid"]] forKey:[result stringForColumn:@"path"]];
 		[cachedFolderPaths setObject:[result stringForColumn:@"path"] forKey:[NSNumber numberWithLongLong:[result longLongIntForColumn:@"rowid"]]];
@@ -316,13 +317,13 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 - (NSUInteger)addFolder:(NSString *)folderPath {
 	NSUInteger retVal = [self _folderIdentifierForPath:folderPath];
 	if (retVal == NSUIntegerMax) {
-		[self.database executeUpdate:@"insert into mailbox (path, unseen_count, count) values (?, 0, 0)", folderPath];
+		[self.connection executeUpdate:@"insert into mailbox (path, unseen_count, count) values (?, 0, 0)", folderPath];
 		PUISSANT_FMDB_ERROR_LOG
 		@synchronized(self) {
-			[self.folderIdentifiersCache setObject:[NSNumber numberWithLongLong:[self.database lastInsertRowId]] forKey:folderPath];
-			[self.folderPaths setObject:folderPath forKey:[NSNumber numberWithLongLong:[self.database lastInsertRowId]]];
+			[self.folderIdentifiersCache setObject:[NSNumber numberWithLongLong:[self.connection lastInsertRowId]] forKey:folderPath];
+			[self.folderPaths setObject:folderPath forKey:[NSNumber numberWithLongLong:[self.connection lastInsertRowId]]];
 		}
-		retVal = [self.database lastInsertRowId];
+		retVal = [self.connection lastInsertRowId];
 	}
 	else {
 		retVal = [self _folderIdentifierForPath:folderPath];
@@ -332,7 +333,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 
 - (NSUInteger)countOfMessagesAtPath:(NSString *)path {
 	NSUInteger folderIdentifier = [self _folderIdentifierForPath:path];
-	FMResultSet *queryResults = [self.database executeQuery:@"select count(*) from message where folder_idx = ?", @(folderIdentifier)];
+	FMResultSet *queryResults = [self.connection executeQuery:@"select count(*) from message where folder_idx = ?", @(folderIdentifier)];
 	__block NSInteger count = 0;
 	if ([queryResults next]) {
 		count = [queryResults intForColumnIndex:0];
@@ -363,7 +364,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 	}
 	if (retVal == NSUIntegerMax) {
 		if ([NSThread currentThread] != [NSThread mainThread]) {
-			FMResultSet *resultSet = [self.database executeQuery:@"select rowid from mailbox where path = ?", path];
+			FMResultSet *resultSet = [self.connection executeQuery:@"select rowid from mailbox where path = ?", path];
 			if (![resultSet next]) {
 				[resultSet close];
 				retVal = NSUIntegerMax;
@@ -398,7 +399,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 			path = nil;
 		}
 		else {
-			FMResultSet *query =[self.database executeQuery:@"select path from mailbox where rowid = ?", [NSNumber numberWithUnsignedInteger:identifier]];
+			FMResultSet *query =[self.connection executeQuery:@"select path from mailbox where rowid = ?", [NSNumber numberWithUnsignedInteger:identifier]];
 			if ([query next]) {
 				path = [query stringForColumn:@"path"];
 			}
@@ -449,26 +450,25 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 		BOOL isSeen = (messageFlags & MCOMessageFlagSeen);
 		BOOL isFlagged = (messageFlags & MCOMessageFlagFlagged);
 		BOOL isDeleted = (messageFlags & MCOMessageFlagDeleted);
-		
-		[self.database executeUpdate:@"insert into message (msgid, date, original_flags, flags, uid, folder_idx, flags_dirty, deleted, is_read, is_flagged, is_deleted, is_notified, is_local, is_facebook, is_twitter) values (?, ?, ?, ?, ?, ?, 0, 0, 1, ?, ?, ?, ?, ?, ?, ?)", message.header.messageID, message.header.receivedDate, @(((MCOIMAPMessage *)message).originalFlags), @(messageFlags), @(((MCOIMAPMessage *)message).uid), @(folderIdentifier), @(isSeen), @(isFlagged), @(isDeleted), @NO, @(message.isFacebookNotification), @(message.isTwitterNotification)];
+		[self.connection executeUpdate:@"insert into message (msgid, date, original_flags, flags, uid, folder_idx, flags_dirty, deleted, is_read, is_flagged, is_deleted, is_notified, is_local, is_facebook, is_twitter) values (?, ?, ?, ?, ?, ?, 0, 0, ?, ?, ?, 0, 0, ?, ?)", message.header.messageID, message.header.receivedDate, @(((MCOIMAPMessage *)message).originalFlags), @(messageFlags), @(((MCOIMAPMessage *)message).uid), @(folderIdentifier), @(isSeen), @(isFlagged), @(isDeleted), @(message.isFacebookNotification), @(message.isTwitterNotification)];
 		PUISSANT_FMDB_ERROR_LOG
-		NSUInteger lastMessageInsertRowID = self.database.lastInsertRowId;
+		NSUInteger lastMessageInsertRowID = self.connection.lastInsertRowId;
 		[self cacheMessage:message atRowIndex:lastMessageInsertRowID];
 		if ([message isKindOfClass:[MCOIMAPMessage class]]) {
 			for (MCOIMAPMessagePart *attachment in [message allAttachments]) {
-				[self.database executeUpdate:@"insert into attachment (folder_idx, message_id, uid, part_id, is_body_attachment, has_contents, filename, filepath) values (?, ?, ?, ?, 0, 0, ?, null)", @(folderIdentifier), @(lastMessageInsertRowID), @(((MCOIMAPMessage *)message).uid), attachment.partID, attachment.filename];
+				[self.connection executeUpdate:@"insert into attachment (folder_idx, message_id, uid, part_id, is_body_attachment, has_contents, filename, filepath) values (?, ?, ?, ?, 0, 0, ?, null)", @(folderIdentifier), @(lastMessageInsertRowID), @(((MCOIMAPMessage *)message).uid), attachment.partID, attachment.filename];
 				PUISSANT_FMDB_ERROR_LOG
 			}
 			for (MCOIMAPMessagePart *attachment in [message attachmentsWithContentIDs]) {
-				[self.database executeUpdate:@"insert into attachment (folder_idx, message_id, uid, part_id, is_body_attachment, has_contents, filename, filepath) values (?, ?, ?, ?, 0, 0, ?, null)", @(folderIdentifier), @(lastMessageInsertRowID), @(((MCOIMAPMessage *)message).uid), attachment.partID, attachment.filename];
+				[self.connection executeUpdate:@"insert into attachment (folder_idx, message_id, uid, part_id, is_body_attachment, has_contents, filename, filepath) values (?, ?, ?, ?, 0, 0, ?, null)", @(folderIdentifier), @(lastMessageInsertRowID), @(((MCOIMAPMessage *)message).uid), attachment.partID, attachment.filename];
 				PUISSANT_FMDB_ERROR_LOG
 			}
 			for (MCOIMAPMessagePart *attachment in [message htmlInlineAttachments]) {
-				[self.database executeUpdate:@"insert into attachment (folder_idx, message_id, uid, part_id, is_body_attachment, has_contents, filename, filepath) values (?, ?, ?, ?, ?, 0, null, null)", @(folderIdentifier), @(lastMessageInsertRowID), @(((MCOIMAPMessage *)message).uid), attachment.partID, @YES];
+				[self.connection executeUpdate:@"insert into attachment (folder_idx, message_id, uid, part_id, is_body_attachment, has_contents, filename, filepath) values (?, ?, ?, ?, ?, 0, null, null)", @(folderIdentifier), @(lastMessageInsertRowID), @(((MCOIMAPMessage *)message).uid), attachment.partID, @YES];
 				PUISSANT_FMDB_ERROR_LOG
 			}
 			if (((MCOIMAPMessage *)message).attachments == nil) {
-				[self.database executeUpdate:@"insert into attachment (folder_idx, message_id, uid, part_id, is_body_attachment, has_contents, filename, filepath) values (?, ?, ?, null, 1, 0, null, null)", @(folderIdentifier), @(lastMessageInsertRowID), @(((MCOIMAPMessage *)message).uid)];
+				[self.connection executeUpdate:@"insert into attachment (folder_idx, message_id, uid, part_id, is_body_attachment, has_contents, filename, filepath) values (?, ?, ?, null, 1, 0, null, null)", @(folderIdentifier), @(lastMessageInsertRowID), @(((MCOIMAPMessage *)message).uid)];
 				PUISSANT_FMDB_ERROR_LOG
 			}
 		}
@@ -486,7 +486,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 		NSMutableArray *array2 = [[NSMutableArray alloc]init];
 		NSUInteger relationID = NSUIntegerMax;
 		for (NSString *relation in relations) {
-			FMResultSet *relationQuery = [self.database executeQuery:@"select thread_id from message_relation where msgid = ?", message.header.messageID];
+			FMResultSet *relationQuery = [self.connection executeQuery:@"select thread_id from message_relation where msgid = ?", message.header.messageID];
 			if (![relationQuery next]) {
 				[relationQuery close];
 				continue;
@@ -508,16 +508,16 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 			&& [self generatePreviewForMessage:message atPath:folderPath];
 		}
 		for (NSNumber *relationNumber in array2) {
-			[self.database executeUpdate:@"update message_relation set thread_id = ? where thread_id = ?", @(relationID), relationNumber];
+			[self.connection executeUpdate:@"update message_relation set thread_id = ? where thread_id = ?", @(relationID), relationNumber];
 			PUISSANT_FMDB_ERROR_LOG
 		}
 		for (NSNumber *relationNumber in array2) {
-			[self.database executeUpdate:@"update conversation_thread_id set thread_id = ? where thread_id = ?", @(relationID), relationNumber];
+			[self.connection executeUpdate:@"update conversation_thread_id set thread_id = ? where thread_id = ?", @(relationID), relationNumber];
 			PUISSANT_FMDB_ERROR_LOG
 		}
 		NSUInteger convoMergeID = NSUIntegerMax;
 		NSMutableArray *conversationsToMerge = [[NSMutableArray alloc]init];
-		FMResultSet *convoIDQuery = [self.database executeQuery:@"select conversation_id, preview_subject from conversation_thread_id,conversation where thread_id = ? and conversation_id = conversation.rowid", @(lastMessageInsertRowID)];
+		FMResultSet *convoIDQuery = [self.connection executeQuery:@"select conversation_id, preview_subject from conversation_thread_id,conversation where thread_id = ? and conversation_id = conversation.rowid", @(lastMessageInsertRowID)];
 		PUISSANT_FMDB_ERROR_LOG
 		while ([convoIDQuery next]) {
 			if ([convoIDQuery stringForColumn:@"preview_subject"].length == 0) {
@@ -536,7 +536,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 			relationID = lastMessageInsertRowID;
 		}
 		for (NSString *relation in relations) {
-			[self.database executeUpdate:@"insert into message_relation (thread_id, msgid) values (?, ?)", @(relationID), message.header.messageID];
+			[self.connection executeUpdate:@"insert into message_relation (thread_id, msgid) values (?, ?)", @(relationID), message.header.messageID];
 			PUISSANT_FMDB_ERROR_LOG
 		}
 		return [self createConversationRelationForMessage:message inFolder:folderIdentifier rowID:rowID
@@ -550,13 +550,16 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 
 - (BOOL)createConversationRelationForMessage:(MCOIMAPMessage *)message inFolder:(NSInteger)folderIdentifier rowID:(NSInteger)rowID relationID:(NSInteger)relationID relations:(NSArray *)relations lastInsert:(NSInteger)lastMessageInsertRowID {
 	BOOL result = YES;
+	if (relationID == NSUIntegerMax) {
+		relationID = lastMessageInsertRowID;
+	}
 	for (NSString *relation in relations) {
-		[self.database executeUpdate:@"insert into message_relation (thread_id, msgid) values (?, ?)", @(relationID), message.header.messageID];
+		[self.connection executeUpdate:@"insert into message_relation (thread_id, msgid) values (?, ?)", @(relationID), message.header.messageID];
 		PUISSANT_FMDB_ERROR_LOG
 	}
 	NSString *extractedSubject = [message.header.extractedSubject lowercaseString];
 	NSUInteger lastConversationInsertRowID = NSUIntegerMax;
-	FMResultSet *queryResults = [self.database executeQuery:@"select rowid, preview_subject from conversation where rowid in (select distinct conversation_id from conversation_thread_id where thread_id = ?)", @(relationID)];
+	FMResultSet *queryResults = [self.connection executeQuery:@"select rowid, preview_subject from conversation where rowid in (select distinct conversation_id from conversation_thread_id where thread_id = ?)", @(relationID)];
 	while ([queryResults next]) {
 		lastConversationInsertRowID = [queryResults longLongIntForColumn:@"rowid"];
 		if ([queryResults stringForColumn:@"preview_subject"] != nil) {
@@ -568,15 +571,15 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 	}
 	[queryResults close];
 	if (lastConversationInsertRowID == NSUIntegerMax) {
-		[self.database executeUpdate:@"insert into conversation (preview_subject, subject) values (?, ?)", extractedSubject, message.header.subject];
+		[self.connection executeUpdate:@"insert into conversation (preview_subject, subject) values (?, ?)", extractedSubject, message.header.subject];
 		PUISSANT_FMDB_ERROR_LOG
-		lastConversationInsertRowID = self.database.lastInsertRowId;
-		[self.database executeUpdate:@"update message set conversation_id = ? where rowid = ?", @(lastConversationInsertRowID), @(lastMessageInsertRowID)];
+		lastConversationInsertRowID = self.connection.lastInsertRowId;
+		[self.connection executeUpdate:@"update message set conversation_id = ? where rowid = ?", @(lastConversationInsertRowID), @(lastMessageInsertRowID)];
 		PUISSANT_FMDB_ERROR_LOG
-		[self.database executeUpdate:@"insert into conversation_thread_id (thread_id, conversation_id) values (?, ?)", @(relationID), @(lastConversationInsertRowID)];
+		[self.connection executeUpdate:@"insert into conversation_thread_id (thread_id, conversation_id) values (?, ?)", @(relationID), @(lastConversationInsertRowID)];
 		PUISSANT_FMDB_ERROR_LOG
 	} else {
-		[self.database executeUpdate:@"update message set conversation_id = ? where rowid = ?", @(lastConversationInsertRowID), @(lastMessageInsertRowID)];
+		[self.connection executeUpdate:@"update message set conversation_id = ? where rowid = ?", @(lastConversationInsertRowID), @(lastMessageInsertRowID)];
 		PUISSANT_FMDB_ERROR_LOG
 	}
 	[self _resetDiffingState];
@@ -618,15 +621,15 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 
 - (void)_mergeIntoConversation:(NSUInteger)conversationID conversations:(NSArray *)conversations {
 	for (NSNumber *convoID in conversations) {
-		[self.database executeUpdate:@"update message set conversation_id = ? where conversation_id = ?", @(conversationID), convoID];
+		[self.connection executeUpdate:@"update message set conversation_id = ? where conversation_id = ?", @(conversationID), convoID];
 		PUISSANT_FMDB_ERROR_LOG
-		[self.database executeUpdate:@"delete from conversation where rowid = ?", convoID];
+		[self.connection executeUpdate:@"delete from conversation where rowid = ?", convoID];
 		PUISSANT_FMDB_ERROR_LOG
 		[self.conversationsCache removeDataForIndex:[convoID longLongValue]];
 		[self.pendingConversationCache removeObjectForKey:convoID];
-		[self.database executeUpdate:@"update conversation_thread_id set conversation_id = ? where thread_id = ?", @(conversationID), convoID];
+		[self.connection executeUpdate:@"update conversation_thread_id set conversation_id = ? where thread_id = ?", @(conversationID), convoID];
 		PUISSANT_FMDB_ERROR_LOG
-		[self.database executeUpdate:@"delete from conversation_data where conversation_id = ?", convoID];
+		[self.connection executeUpdate:@"delete from conversation_data where conversation_id = ?", convoID];
 		PUISSANT_FMDB_ERROR_LOG
 	}
 }
@@ -636,9 +639,9 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 		[self.plainTextCache setData:data forKey:PSTIdentifierForAttachmentWithPath(message, @"full", path)];
 	}
 	NSUInteger rowID = [self indexOfMessage:message atPath:path];
-	[self.database executeUpdate:@"update attachment set has_contents = 1 where message_id = ?", @(rowID)];
-	if ([self.database hadError]) {
-		PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.database lastErrorMessage]);
+	[self.connection executeUpdate:@"update attachment set has_contents = 1 where message_id = ?", @(rowID)];
+	if ([self.connection hadError]) {
+		PSTLog(@"PSTMessageDatabase error %d: %@", [self.connection lastErrorCode], [self.connection lastErrorMessage]);
 	}
 	[self _generatePreviewForMessage:message atPath:path];
 }
@@ -657,7 +660,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 			[data writeToFile:attachmentFilename atomically:YES];
 		}
 	}
-	[self.database executeUpdate:@"update attachment set has_contents = 1, filepath = ? where message_id = ? and part_id = ?", attachmentFilename, @(rowID), part_id];
+	[self.connection executeUpdate:@"update attachment set has_contents = 1, filepath = ? where message_id = ? and part_id = ?", attachmentFilename, @(rowID), part_id];
 	PUISSANT_FMDB_ERROR_LOG
 	[self _generatePreviewForMessage:message atPath:path];
 }
@@ -676,7 +679,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 		counter++;
 	}
 	NSUInteger folderIdentifier = [self _folderIdentifierForPath:path];
-	FMResultSet *uidResult = [self.database executeQuery:queryString, @(folderIdentifier)];
+	FMResultSet *uidResult = [self.connection executeQuery:queryString, @(folderIdentifier)];
 	NSMutableIndexSet *set = [[NSMutableIndexSet alloc]init];
 	NSMutableIndexSet *indexset = [[NSMutableIndexSet alloc]init];
 	if ([uidResult next]) {
@@ -697,7 +700,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 - (NSIndexSet *)messagesUIDsSetForPath:(NSString *)path {
 	NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
 	NSUInteger folderIdentifier = [self _folderIdentifierForPath:path];
-	FMResultSet *resultSet = [self.database executeQuery:@"select uid from message indexed by message_folder_idx_idx where folder_idx = ? and is_local = 0 order by uid asc", @(folderIdentifier)];
+	FMResultSet *resultSet = [self.connection executeQuery:@"select uid from message indexed by message_uid_index where folder_idx = ? and is_local = 0 order by uid asc", @(folderIdentifier)];
 	if ([resultSet next]) {
 		while ([resultSet next]) {
 			[indexSet addIndex:[resultSet longLongIntForColumn:@"uid"]];
@@ -711,9 +714,9 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 	FMResultSet *queryResult = nil;
 	NSUInteger folderIdentifier = [self _folderIdentifierForPath:folderPath];
 	
-	[self.database executeUpdate:@"update message set deleted = 2 where msgid = ? and folder_idx = ? and is_local = 0", msgID, @(folderIdentifier)];
+	[self.connection executeUpdate:@"update message set deleted = 2 where msgid = ? and folder_idx = ? and is_local = 0", msgID, @(folderIdentifier)];
 	PUISSANT_FMDB_ERROR_LOG
-	queryResult = [self.database executeQuery:@"select conversation_id from message where msgid = ? and folder_idx = ? and is_local = 0", msgID, @(folderIdentifier)];
+	queryResult = [self.connection executeQuery:@"select conversation_id from message where msgid = ? and folder_idx = ? and is_local = 0", msgID, @(folderIdentifier)];
 	while ([queryResult next]) {
 		[self _resetDiffingState];
 		NSUInteger convoID = [queryResult longLongIntForColumn:@"conversation_id"];
@@ -754,7 +757,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 	NSMutableArray *oldMessagesToNotify = [[NSMutableArray alloc]init];
 	NSMutableArray *messagesArray = [[NSMutableArray alloc]init];
 	NSMutableArray *conversationIDs = [[NSMutableArray alloc]init];
-	FMResultSet *query = [self.database executeQuery:@"select uid,rowid,conversation_id from message indexed by message_folder_idx_is_read_idx where is_notified = 0 and is_read = 0 and folder_idx = ?", @(folderIdentifier)];
+	FMResultSet *query = [self.connection executeQuery:@"select uid,rowid,conversation_id from message indexed by message_flags_idx where is_notified = 0 and is_read = 0 and folder_idx = ?", @(folderIdentifier)];
 	@autoreleasepool {
 		while ([query next]){
 			long long rowID = [query longLongIntForColumn:@"rowid"];
@@ -776,7 +779,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 	}
 	[query close];
 	long long lastUID = [lastNotifiedUID longLongValue];
-	query = [self.database executeQuery:@"select uid from message where folder_idx = ? order by uid desc limit 1", @(folderIdentifier)];
+	query = [self.connection executeQuery:@"select uid from message where folder_idx = ? order by uid desc limit 1", @(folderIdentifier)];
 	if ([query next]) {
 		long long uid = [query longLongIntForColumn:@"uid"];
 		if (uid > lastUID) {
@@ -809,10 +812,10 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 	[retVal setObject:messagesArray forKey:@"Messages"];
 	[retVal setObject:conversationIDs forKey:@"ConversationIDs"];
 	for (NSNumber *rowID in newMessagesToNotify) {
-		[self.database executeUpdate:@"update message set is_notified = 1 where rowid = ?", rowID];
+		[self.connection executeUpdate:@"update message set is_notified = 1 where rowid = ?", rowID];
 	}
 	for (NSNumber *rowID in oldMessagesToNotify) {
-		[self.database executeUpdate:@"update message set is_notified = 1 where rowid = ?", rowID];
+		[self.connection executeUpdate:@"update message set is_notified = 1 where rowid = ?", rowID];
 	}
 	return retVal;
 }
@@ -822,7 +825,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 	NSMutableArray *deleteArray = [[NSMutableArray alloc]init];
 	NSMutableArray *purgeArray = [[NSMutableArray alloc]init];
 	NSUInteger folderIdentifier = [self _folderIdentifierForPath:folder.path];
-	FMResultSet *resultSet = [self.database executeQuery:@"select rowid, flags, original_flags, deleted from message indexed by message_folder_idx_idx where folder_idx = ?", @(folderIdentifier)];
+	FMResultSet *resultSet = [self.connection executeQuery:@"select rowid, flags, original_flags, deleted from message indexed by message_uid_index where folder_idx = ?", @(folderIdentifier)];
 	if ([resultSet next]) {
 		@autoreleasepool {
 			while ([resultSet next]) {
@@ -877,7 +880,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 
 - (void)markMessageAsDeleted:(PSTSerializableMessage *)message {
 	NSUInteger messageIndex = [self indexOfMessage:message atPath:message.dm_folder.path];
-	[self.database executeUpdate:@"update message set deleted = 1 where rowid = ?", @(messageIndex)];
+	[self.connection executeUpdate:@"update message set deleted = 1 where rowid = ?", @(messageIndex)];
 	[self _updateConversationVisibilityWithMessage:messageIndex];
 }
 
@@ -885,7 +888,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 - (void)removeLocalMessagesForFolderPath:(NSString *)path  {
 	NSMutableArray *array = [[NSMutableArray alloc]init];
 	NSUInteger folderIdentifier = [self _folderIdentifierForPath:path];
-	FMResultSet *resultsSet = [self.database executeQuery:@"select rowid from message indexed by message_folder_idx_idx where folder_idx = ? and deleted = 0 and is_deleted = 0 and is_local = 1", @(folderIdentifier)];
+	FMResultSet *resultsSet = [self.connection executeQuery:@"select rowid from message indexed by message_uid_index where folder_idx = ? and deleted = 0 and is_deleted = 0 and is_local = 1", @(folderIdentifier)];
 	if ([resultsSet next]) {
 		while ([resultsSet next]) {
 			[array addObject:@([resultsSet longLongIntForColumn:@"rowid"])];
@@ -972,7 +975,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 	BOOL result = NO;
 	if (folderPath != nil) {
 		NSUInteger folderIdentifier = [self _folderIdentifierForPath:folderPath];
-		FMResultSet *resultSet = [self.database executeQuery:@"select rowid, flags, original_flags, conversation_id from message where uid = ? and folder_idx = ?", @(((MCOIMAPMessage *)message).uid),@(folderIdentifier)];
+		FMResultSet *resultSet = [self.connection executeQuery:@"select rowid, flags, original_flags, conversation_id from message where uid = ? and folder_idx = ?", @(((MCOIMAPMessage *)message).uid),@(folderIdentifier)];
 		if (![resultSet next]) {
 			result = NO;
 			[resultSet close];
@@ -988,7 +991,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 				BOOL isSeen = serverMessageFlags & MCOMessageFlagSeen;
 				BOOL isFlagged = serverMessageFlags & MCOMessageFlagFlagged;
 				BOOL isDeleted = serverMessageFlags & MCOMessageFlagDeleted;
-				[self.database executeUpdate:@"update message set flags = ?, original_flags = ?, is_read = ?, is_flagged = ?, is_deleted = ? where uid = ? and folder_idx = ?", @(flags), @(serverMessageFlags), @(isSeen), @(isFlagged), @(isDeleted), @(((MCOIMAPMessage *)message).uid),@(folderIdentifier)];
+				[self.connection executeUpdate:@"update message set flags = ?, original_flags = ?, is_read = ?, is_flagged = ?, is_deleted = ? where uid = ? and folder_idx = ?", @(flags), @(serverMessageFlags), @(isSeen), @(isFlagged), @(isDeleted), @(((MCOIMAPMessage *)message).uid),@(folderIdentifier)];
 				PUISSANT_FMDB_ERROR_LOG
 				[self _updateMessageFlagsAtRowID:rowID flags:serverMessageFlags originalFlags:flags];
 				[self _resetDiffingState];
@@ -1009,7 +1012,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 		BOOL isSeen = flags & MCOMessageFlagSeen;
 		BOOL isFlagged = flags & MCOMessageFlagFlagged;
 		BOOL isDeleted = flags & MCOMessageFlagDeleted;
-		[self.database executeUpdate:@"update message set flags = ?, flags_dirty = 1, is_read = ?, is_flagged = ?, is_deleted = ? where rowid = ?", @(flags), @(isSeen), @(isFlagged), @(isDeleted),@(rowID)];
+		[self.connection executeUpdate:@"update message set flags = ?, flags_dirty = 1, is_read = ?, is_flagged = ?, is_deleted = ? where rowid = ?", @(flags), @(isSeen), @(isFlagged), @(isDeleted),@(rowID)];
 		PUISSANT_FMDB_ERROR_LOG
 		[self _updateMessageRowID:rowID flags:flags];
 		[self _updateConversationVisibilityWithMessage:rowID];
@@ -1121,7 +1124,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 - (NSUInteger)countForPath:(NSString *)path {
 	NSUInteger result = 0;
 	NSUInteger folderIdentifier = [self _folderIdentifierForPath:path];
-	FMResultSet *resultSet = [self.database executeQuery:@"select count(distinct conversation_id) from message where folder_idx = ? and deleted = 0 and is_deleted = 0", @(folderIdentifier)];
+	FMResultSet *resultSet = [self.connection executeQuery:@"select count(distinct conversation_id) from message where folder_idx = ? and deleted = 0 and is_deleted = 0", @(folderIdentifier)];
 	if ([resultSet next]) {
 		result = [resultSet intForColumnIndex:0];
 	}
@@ -1134,9 +1137,9 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 		//do nothing
 	} else {
 		NSUInteger folderIdentifier = [self _folderIdentifierForPath:path];
-		[self.database executeUpdate:@"update mailbox set count = ? where rowid = ?", @(count), @(folderIdentifier)];
-		if ([self.database hadError]) {
-			PSTLog(@"PSTMessageDatabase error %d: %@", self.database.lastErrorCode, self.database.lastErrorMessage);
+		[self.connection executeUpdate:@"update mailbox set count = ? where rowid = ?", @(count), @(folderIdentifier)];
+		if ([self.connection hadError]) {
+			PSTLog(@"PSTMessageDatabase error %d: %@", self.connection.lastErrorCode, self.connection.lastErrorMessage);
 		}
 	}
 	[self.folderCounts setObject:@(count) forKey:path];
@@ -1145,7 +1148,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 - (NSUInteger)unseenCountForPath:(NSString *)path {
 	NSUInteger result = 0;
 	NSUInteger folderIdentifier = [self _folderIdentifierForPath:path];
-	FMResultSet *resultSet = [self.database executeQuery:@"select count(distinct conversation_id) from message indexed by message_folder_idx_is_read_idx where folder_idx = ? and is_read = 0 and deleted = 0 and is_deleted = 0", @(folderIdentifier)];
+	FMResultSet *resultSet = [self.connection executeQuery:@"select count(distinct conversation_id) from message indexed by message_read_idx where folder_idx = ? and is_read = 0 and deleted = 0 and is_deleted = 0", @(folderIdentifier)];
 	if ([resultSet next]) {
 		result = [resultSet intForColumnIndex:0];
 	}
@@ -1158,9 +1161,9 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 		//do nothing
 	} else {
 		NSUInteger folderIdentifier = [self _folderIdentifierForPath:path];
-		[self.database executeUpdate:@"update mailbox set unseen_count = ? where rowid = ?", @(count), @(folderIdentifier)];
-		if ([self.database hadError]) {
-			PSTLog(@"PSTMessageDatabase error %d: %@", self.database.lastErrorCode, self.database.lastErrorMessage);
+		[self.connection executeUpdate:@"update mailbox set unseen_count = ? where rowid = ?", @(count), @(folderIdentifier)];
+		if ([self.connection hadError]) {
+			PSTLog(@"PSTMessageDatabase error %d: %@", self.connection.lastErrorCode, self.connection.lastErrorMessage);
 		}
 	}
 	[self.folderUnreadCounts setObject:@(count) forKey:path];
@@ -1169,7 +1172,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 - (NSUInteger)countForStarredNotInTrashFolderPath:(NSString *)path; {
 	NSUInteger result = 0;
 	NSUInteger folderIdentifier = [self _folderIdentifierForPath:path];
-	FMResultSet *resultSet = [self.database executeQuery:@"select count(distinct conversation_id) from message where is_flagged = 1 and folder_idx != ? and deleted = 0 and is_deleted = 0", @(folderIdentifier)];
+	FMResultSet *resultSet = [self.connection executeQuery:@"select count(distinct conversation_id) from message where is_flagged = 1 and folder_idx != ? and deleted = 0 and is_deleted = 0", @(folderIdentifier)];
 	if ([resultSet next]) {
 		result = [resultSet intForColumnIndex:0];
 	}
@@ -1180,7 +1183,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 - (NSUInteger)countForNextStepsNotInTrashFolderPath:(NSString *)path; {
 	NSUInteger result = 0;
 	NSUInteger folderIdentifier = [self _folderIdentifierForPath:path];
-	FMResultSet *resultSet = [self.database executeQuery:@"select count(distinct conversation_id) from conversation_data where action_step != 0 and folder_idx != ? and visible = 1", @(folderIdentifier)];
+	FMResultSet *resultSet = [self.connection executeQuery:@"select count(distinct conversation_id) from conversation_data where action_step != 0 and folder_idx != ? and visible = 1", @(folderIdentifier)];
 	if ([resultSet next]) {
 		result = [resultSet intForColumnIndex:0];
 	}
@@ -1248,7 +1251,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 		result = 0;
 		if ([NSThread currentThread] != [NSThread mainThread]) {
 			NSUInteger folderIdentifier = [self _folderIdentifierForPath:path];
-			FMResultSet *resultSet = [self.database executeQuery:@"select count from mailbox where rowid = ?", @(folderIdentifier)];
+			FMResultSet *resultSet = [self.connection executeQuery:@"select count from mailbox where rowid = ?", @(folderIdentifier)];
 			if ([resultSet next]) {
 				result = [resultSet intForColumn:@"count"];
 				[resultSet close];
@@ -1271,7 +1274,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 			if (retVal == LLONG_MAX) {
 				if ([NSThread currentThread] != [NSThread mainThread]) {
 					NSNumber *folderIdentifier = [NSNumber numberWithLongLong:[self _folderIdentifierForPath:path]];
-					FMResultSet *resultsSet = [self.database executeQuery:@"select unseen_count from mailbox where rowid = ?", folderIdentifier];
+					FMResultSet *resultsSet = [self.connection executeQuery:@"select unseen_count from mailbox where rowid = ?", folderIdentifier];
 					if ([resultsSet next]) {
 						retVal = [resultsSet intForColumn:@"unseen_count"];
 						@synchronized (self) {
@@ -1286,7 +1289,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 	}
 	if ([NSThread currentThread] != [NSThread mainThread]) {
 		NSNumber *folderIdentifier = [NSNumber numberWithLongLong:[self _folderIdentifierForPath:path]];
-		FMResultSet *resultsSet = [self.database executeQuery:@"select unseen_count from mailbox where rowid = ?", folderIdentifier];
+		FMResultSet *resultsSet = [self.connection executeQuery:@"select unseen_count from mailbox where rowid = ?", folderIdentifier];
 		if ([resultsSet next]) {
 			retVal = [resultsSet intForColumn:@"unseen_count"];
 			@synchronized (self) {
@@ -1343,15 +1346,15 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 	FMResultSet *resultSet = nil;
 	if (otherFolderIdentifier == NSUIntegerMax) {
 		if (limit != 0) {
-			resultSet = [self.database executeQuery:@"select action_step,folder_idx,conversation_id,most_recent_message_date from conversation_data where folder_idx = ? and is_facebook = 0 and is_twitter = 0 and visible = 1 limit ?", @(folderIdentifier), @(limit)];
+			resultSet = [self.connection executeQuery:@"select action_step,folder_idx,conversation_id,most_recent_message_date from conversation_data where folder_idx = ? and is_facebook = 0 and is_twitter = 0 and visible = 1 limit ?", @(folderIdentifier), @(limit)];
 		} else {
-			resultSet = [self.database executeQuery:@"select action_step,folder_idx,conversation_id,most_recent_message_date from conversation_data where folder_idx = ? and is_facebook = 0 and is_twitter = 0 and visible = 1", @(folderIdentifier)];
+			resultSet = [self.connection executeQuery:@"select action_step,folder_idx,conversation_id,most_recent_message_date from conversation_data where folder_idx = ? and is_facebook = 0 and is_twitter = 0 and visible = 1", @(folderIdentifier)];
 		}
 	} else {
 		if (limit != 0) {
-			resultSet = [self.database executeQuery:@"select action_step,folder_idx,conversation_id,most_recent_message_date from conversation_data where folder_idx in (?, ?) and is_facebook = 0 and is_twitter = 0 and visible = 1 limit ?", @(folderIdentifier), @(otherFolderIdentifier), @(limit)];
+			resultSet = [self.connection executeQuery:@"select action_step,folder_idx,conversation_id,most_recent_message_date from conversation_data where folder_idx in (?, ?) and is_facebook = 0 and is_twitter = 0 and visible = 1 limit ?", @(folderIdentifier), @(otherFolderIdentifier), @(limit)];
 		} else {
-			resultSet = [self.database executeQuery:@"select action_step,folder_idx,conversation_id,most_recent_message_date from conversation_data where folder_idx in (?, ?) and is_facebook = 0 and is_twitter = 0 and visible = 1", @(folderIdentifier), @(otherFolderIdentifier)];
+			resultSet = [self.connection executeQuery:@"select action_step,folder_idx,conversation_id,most_recent_message_date from conversation_data where folder_idx in (?, ?) and is_facebook = 0 and is_twitter = 0 and visible = 1", @(folderIdentifier), @(otherFolderIdentifier)];
 		}
 	}
 	PUISSANT_FMDB_ERROR_LOG
@@ -1404,12 +1407,12 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 	NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
 	FMResultSet *resultSet = nil;
 	if (limit != 0) {
-		resultSet = [self.database executeQuery:@"select conversation_id,date from message where is_flagged = 1 and folder_idx != ? and deleted = 0 and is_deleted = 0 limit ?", @(folderIdentifier), @(limit)];
+		resultSet = [self.connection executeQuery:@"select conversation_id,date from message where is_flagged = 1 and folder_idx != ? and deleted = 0 and is_deleted = 0 limit ?", @(folderIdentifier), @(limit)];
 	} else {
-		resultSet = [self.database executeQuery:@"select conversation_id,date from message where is_flagged = 1 and folder_idx != ? and deleted = 0 and is_deleted = 0", @(folderIdentifier)];
+		resultSet = [self.connection executeQuery:@"select conversation_id,date from message where is_flagged = 1 and folder_idx != ? and deleted = 0 and is_deleted = 0", @(folderIdentifier)];
 	}
-	if ([self.database hadError]) {
-		PSTLog(@"PSTMessageDatabase error %d: %@", self.database.lastErrorCode, self.database.lastErrorMessage);
+	if ([self.connection hadError]) {
+		PSTLog(@"PSTMessageDatabase error %d: %@", self.connection.lastErrorCode, self.connection.lastErrorMessage);
 	}
 	@autoreleasepool {
 		BOOL cancelled;
@@ -1454,12 +1457,12 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 	NSUInteger trashFolderIdentifier = [self _folderIdentifierForPath:trashFolder.path];
 	FMResultSet *resultSet = nil;
 	if (limit != 0) {
-		resultSet = [self.database executeQuery:@"select action_step,folder_idx,conversation_id,most_recent_message_date from conversation_data where folder_idx != ? and action_step != 0 and is_facebook = 0 and is_twitter = 0 and visible = 1 limit ?", @(trashFolderIdentifier), @(limit)];
+		resultSet = [self.connection executeQuery:@"select action_step,folder_idx,conversation_id,most_recent_message_date from conversation_data where folder_idx != ? and action_step != 0 and is_facebook = 0 and is_twitter = 0 and visible = 1 limit ?", @(trashFolderIdentifier), @(limit)];
 	} else {
-		resultSet = [self.database executeQuery:@"select action_step,folder_idx,conversation_id,most_recent_message_date from conversation_data where folder_idx != ? and action_step != 0 and is_facebook = 0 and is_twitter = 0 and visible = 1", @(trashFolderIdentifier)];
+		resultSet = [self.connection executeQuery:@"select action_step,folder_idx,conversation_id,most_recent_message_date from conversation_data where folder_idx != ? and action_step != 0 and is_facebook = 0 and is_twitter = 0 and visible = 1", @(trashFolderIdentifier)];
 	}
-	if ([self.database hadError]) {
-		PSTLog(@"PSTMessageDatabase error %d: %@", self.database.lastErrorCode, self.database.lastErrorMessage);
+	if ([self.connection hadError]) {
+		PSTLog(@"PSTMessageDatabase error %d: %@", self.connection.lastErrorCode, self.connection.lastErrorMessage);
 	}
 	NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
 	BOOL cancelled = NO;
@@ -1507,9 +1510,9 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 	NSUInteger folderIdentifier = [self _folderIdentifierForPath:trashFolder.path];
 	FMResultSet *resultSet = nil;
 	if (limit != 0) {
-		resultSet = [self.database executeQuery:@"select folder_idx,conversation_id,most_recent_message_date from message where folder_idx != ? and visible = 1 limit ?", @(folderIdentifier), @(limit)];
+		resultSet = [self.connection executeQuery:@"select folder_idx,conversation_id,most_recent_message_date from message where folder_idx != ? and visible = 1 limit ?", @(folderIdentifier), @(limit)];
 	} else {
-		resultSet = [self.database executeQuery:@"select folder_idx,conversation_id,most_recent_message_date from conversation_data where folder_idx != ? and visible = 1", @(folderIdentifier)];
+		resultSet = [self.connection executeQuery:@"select folder_idx,conversation_id,most_recent_message_date from conversation_data where folder_idx != ? and visible = 1", @(folderIdentifier)];
 	}
 	PUISSANT_FMDB_ERROR_LOG
 	NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
@@ -1558,12 +1561,12 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 	NSMutableArray *conversations = [[NSMutableArray alloc]init];
 	FMResultSet *resultSet = nil;
 	if (limit != 0) {
-		resultSet = [self.database executeQuery:@"select conversation_id from message where folder_idx = ? and is_facebook = 1 = 1 limit ?", @(folderIdentifier), @(limit)];
+		resultSet = [self.connection executeQuery:@"select conversation_id from message where folder_idx = ? and is_facebook = 1 = 1 limit ?", @(folderIdentifier), @(limit)];
 	} else {
-		resultSet = [self.database executeQuery:@"select conversation_id from message where folder_idx = ? and is_facebook = 1", @(folderIdentifier)];
+		resultSet = [self.connection executeQuery:@"select conversation_id from message where folder_idx = ? and is_facebook = 1", @(folderIdentifier)];
 	}
-	if ([self.database hadError]) {
-		PSTLog(@"PSTMessageDatabase error %d: %@", self.database.lastErrorCode, self.database.lastErrorMessage);
+	if ([self.connection hadError]) {
+		PSTLog(@"PSTMessageDatabase error %d: %@", self.connection.lastErrorCode, self.connection.lastErrorMessage);
 	}
 	@autoreleasepool {
 		BOOL cancelled;
@@ -1597,9 +1600,9 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 	NSMutableArray *conversations = [[NSMutableArray alloc]init];
 	FMResultSet *resultSet = nil;
 	if (limit != 0) {
-		resultSet = [self.database executeQuery:@"select conversation_id from message where folder_idx = ? and is_twitter = 1 limit ?", @(folderIdentifier), @(limit)];
+		resultSet = [self.connection executeQuery:@"select conversation_id from message where folder_idx = ? and is_twitter = 1 limit ?", @(folderIdentifier), @(limit)];
 	} else {
-		resultSet = [self.database executeQuery:@"select conversation_id from message where folder_idx = ? and is_twitter = 1", @(folderIdentifier)];
+		resultSet = [self.connection executeQuery:@"select conversation_id from message where folder_idx = ? and is_twitter = 1", @(folderIdentifier)];
 	}
 	PUISSANT_FMDB_ERROR_LOG
 	@autoreleasepool {
@@ -1635,12 +1638,12 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 	NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
 	FMResultSet *resultSet = nil;
 	if (limit != 0) {
-		resultSet = [self.database executeQuery:@"select conversation_id,date from message where folder_idx = ? and is_read = 0 and deleted = 0 and is_deleted = 0 limit ?", @(folderIdentifier), @(limit)];
+		resultSet = [self.connection executeQuery:@"select conversation_id,date from message where folder_idx = ? and is_read = 0 and deleted = 0 and is_deleted = 0 limit ?", @(folderIdentifier), @(limit)];
 	} else {
-		resultSet = [self.database executeQuery:@"select conversation_id,date from message where folder_idx = ? and is_read = 0 and deleted = 0 and is_deleted = 0", @(folderIdentifier)];
+		resultSet = [self.connection executeQuery:@"select conversation_id,date from message where folder_idx = ? and is_read = 0 and deleted = 0 and is_deleted = 0", @(folderIdentifier)];
 	}
-	if ([self.database hadError]) {
-		PSTLog(@"PSTMessageDatabase error %d: %@", self.database.lastErrorCode, self.database.lastErrorMessage);
+	if ([self.connection hadError]) {
+		PSTLog(@"PSTMessageDatabase error %d: %@", self.connection.lastErrorCode, self.connection.lastErrorMessage);
 	}
 	@autoreleasepool {
 		BOOL cancelled;
@@ -1688,14 +1691,14 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 }
 
 - (void)updateActionstepsForConversationID:(NSUInteger)conversationID actionStep:(PSTActionStepValue)actionStep {
-	[self.database executeUpdate:@"update conversation_data set action_step = ? where conversation_id = ?", @(actionStep), @(conversationID)];
+	[self.connection executeUpdate:@"update conversation_data set action_step = ? where conversation_id = ?", @(actionStep), @(conversationID)];
 	PUISSANT_FMDB_ERROR_LOG
 }
 
 - (NSArray *)localDraftMessagesForFolder:(MCOIMAPFolder *)folder {
 	NSMutableArray *array = [NSMutableArray array];
 	NSMutableArray *array2 = [NSMutableArray array];
-	FMResultSet *resultSet = [self.database executeQuery:@"select rowid,flags from message where folder_idx = ? and deleted = 0 and is_deleted = 0 and is_local = 1", [NSNumber numberWithLongLong:[self _folderIdentifierForPath:folder.path]]];
+	FMResultSet *resultSet = [self.connection executeQuery:@"select rowid,flags from message where folder_idx = ? and deleted = 0 and is_deleted = 0 and is_local = 1", [NSNumber numberWithLongLong:[self _folderIdentifierForPath:folder.path]]];
 	if ([resultSet next]) {
 		while ([resultSet next] != 0) {
 			id res = [self lookupCachedMessageAtRowIndex:[resultSet longLongIntForColumn:@"rowid"]];
@@ -1802,9 +1805,9 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 - (NSArray *)attachmentsInFolder:(MCOIMAPFolder *)folder {
 	NSUInteger folderIdentifier = [self _folderIdentifierForPath:folder.path];
 	NSMutableArray *attachments = [[NSMutableArray alloc]init];
-	FMResultSet *resultSet = [self.database executeQuery:@"select rowid,message_id,filename,filepath from attachment where filepath != 0 and folder_idx = ?", @(folderIdentifier)];
-	if ([self.database hadError]) {
-		PSTLog(@"PSTMessageDatabase error %d: %@", self.database.lastErrorCode, self.database.lastErrorMessage);
+	FMResultSet *resultSet = [self.connection executeQuery:@"select rowid,message_id,filename,filepath from attachment where filepath != 0 and folder_idx = ?", @(folderIdentifier)];
+	if ([self.connection hadError]) {
+		PSTLog(@"PSTMessageDatabase error %d: %@", self.connection.lastErrorCode, self.connection.lastErrorMessage);
 	}
 	@autoreleasepool {
 		while ([resultSet next]) {
@@ -1836,9 +1839,9 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 	NSUInteger folderIdentifier = [self _folderIdentifierForPath:trashFolder.path];
 	NSUInteger allMailFolderIdentifier = [self _folderIdentifierForPath:allMailFolder.path];
 	NSMutableArray *attachments = [[NSMutableArray alloc]init];
-	FMResultSet *resultSet = [self.database executeQuery:@"select rowid,message_id,filename,filepath from attachment where filepath != 0 and folder_idx != ? and folder_idx != ?", @(folderIdentifier), @(allMailFolderIdentifier)];
-	if ([self.database hadError]) {
-		PSTLog(@"PSTMessageDatabase error %d: %@", self.database.lastErrorCode, self.database.lastErrorMessage);
+	FMResultSet *resultSet = [self.connection executeQuery:@"select rowid,message_id,filename,filepath from attachment where filepath != 0 and folder_idx != ? and folder_idx != ?", @(folderIdentifier), @(allMailFolderIdentifier)];
+	if ([self.connection hadError]) {
+		PSTLog(@"PSTMessageDatabase error %d: %@", self.connection.lastErrorCode, self.connection.lastErrorMessage);
 	}
 	@autoreleasepool {
 		while ([resultSet next]) {
@@ -1869,9 +1872,9 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 	NSUInteger folderIdentifier = [self _folderIdentifierForPath:folder.path];
 	FMResultSet *resultSet = nil;
 	if (maxUID != 0) {
-		resultSet = [self.database executeQuery:@"select rowid, message_id, part_id from attachment where folder_idx = ? and has_contents = 0 and is_text = 1 and uid < ? order by uid desc limit 1", @(folderIdentifier), @(maxUID)];
+		resultSet = [self.connection executeQuery:@"select rowid, message_id, part_id from attachment where folder_idx = ? and has_contents = 0 and is_text = 1 and uid < ? order by uid desc limit 1", @(folderIdentifier), @(maxUID)];
 	} else {
-		resultSet = [self.database executeQuery:@"select rowid, message_id, part_id from attachment where folder_idx = ? and has_contents = 0 and is_text = 1 order by uid desc limit 1", @(folderIdentifier)];
+		resultSet = [self.connection executeQuery:@"select rowid, message_id, part_id from attachment where folder_idx = ? and has_contents = 0 and is_text = 1 order by uid desc limit 1", @(folderIdentifier)];
 	}
 	PUISSANT_FMDB_ERROR_LOG
 	if ([resultSet next]) {
@@ -2105,7 +2108,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 
 - (BOOL)_hasDataForAttachmentWithPartID:(NSString *)part_id messageRowID:(NSUInteger)rowID {
 	BOOL result = NO;
-	FMResultSet *queryResults = [self.database executeQuery:@"select has_contents from attachment where message_id = ? and part_id = ?", @(rowID), part_id];
+	FMResultSet *queryResults = [self.connection executeQuery:@"select has_contents from attachment where message_id = ? and part_id = ?", @(rowID), part_id];
 	if ([queryResults next]) {
 		result = [queryResults longLongIntForColumn:@"has_contents"];
 	}
@@ -2241,7 +2244,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 
 - (void)commitMessageFlags:(MCOIMAPMessage *)message forFolder:(NSString *)folder {
 	NSUInteger rowID = [self indexOfMessage:message atPath:folder];
-	FMResultSet *result = [self.database executeQuery:@"select flags from message where rowid = ?", @(rowID)];
+	FMResultSet *result = [self.connection executeQuery:@"select flags from message where rowid = ?", @(rowID)];
 	if ([result next]) {
 		BOOL hasDiffFlags = NO;
 		if (message.flags != [result intForColumn:@"flags"]) {
@@ -2272,7 +2275,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 			retVal = nil;
 		}
 		else {
-			FMResultSet *query = [self.database executeQuery:@"select path from mailbox where rowid = ?", [NSNumber numberWithUnsignedInteger:identifier]];
+			FMResultSet *query = [self.connection executeQuery:@"select path from mailbox where rowid = ?", [NSNumber numberWithUnsignedInteger:identifier]];
 			if ([query next]) {
 				retVal = [query stringForColumn:@"path"];
 			}
@@ -2289,7 +2292,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 }
 
 - (void)_removeMessageWithRowID:(long long)rowID {
-	FMResultSet *resultSet = [self.database executeQuery:@"select conversation_id, uid, folder_idx, is_local from message where rowid = ?", [NSNumber numberWithLongLong:rowID]];
+	FMResultSet *resultSet = [self.connection executeQuery:@"select conversation_id, uid, folder_idx, is_local from message where rowid = ?", [NSNumber numberWithLongLong:rowID]];
 	PUISSANT_FMDB_ERROR_LOG
 	long long conversationID;
 	uint32_t uid;
@@ -2326,7 +2329,7 @@ PSTLog(@"PSTMessageDatabase error %d: %@", [self.database lastErrorCode], [self.
 			identifier = PSTIdentifierForMessageID(uid, folderPath);
 		}
 		[self.previewCache removeDataForKey:identifier];
-		[self.database executeUpdate:@"delete from message where rowid = ?", @(rowID)];
+		[self.connection executeUpdate:@"delete from message where rowid = ?", @(rowID)];
 		PUISSANT_FMDB_ERROR_LOG
 		[self _storeRemoveMessageForRowID:rowID];
 		[self _modifyRelationIDForRowID:rowID];
@@ -2396,7 +2399,7 @@ PSTConversationCache *PSTSearchConversationCacheForConversationID(NSUInteger con
 
 - (NSUInteger)_rowIDForDraftMessageID:(NSString *)messageID draftFolderPath:(NSString *)draftFolderPath {
 	NSUInteger result = NSUIntegerMax;
-	FMResultSet *resultSet = [self.database executeQuery:@"select rowid from message indexed by message_msgid_idx where msgid = ? and folder_idx = ? and is_local = 1 limit 1", messageID, @([self _folderIdentifierForPath:draftFolderPath])];
+	FMResultSet *resultSet = [self.connection executeQuery:@"select rowid from message indexed by message_msgid_idx where msgid = ? and folder_idx = ? and is_local = 1 limit 1", messageID, @([self _folderIdentifierForPath:draftFolderPath])];
 	if ([resultSet next]) {
 		result = [resultSet longLongIntForColumn:@"rowid"];
 	}
@@ -2406,7 +2409,7 @@ PSTConversationCache *PSTSearchConversationCacheForConversationID(NSUInteger con
 
 - (NSUInteger)_rowIDForMessageUID:(uint32_t)messageUID folderPath:(NSString *)folderPath {
 	NSUInteger result = NSUIntegerMax;
-	FMResultSet *resultSet = [self.database executeQuery:@"select rowid from message where uid = ? and folder_idx = ? limit 1", @(messageUID), @([self _folderIdentifierForPath:folderPath])];
+	FMResultSet *resultSet = [self.connection executeQuery:@"select rowid from message where uid = ? and folder_idx = ? limit 1", @(messageUID), @([self _folderIdentifierForPath:folderPath])];
 	if ([resultSet next]) {
 		result = [resultSet longLongIntForColumn:@"rowid"];
 		[resultSet close];
@@ -2447,7 +2450,7 @@ PSTConversationCache *PSTSearchConversationCacheForConversationID(NSUInteger con
 - (void)_updateConversationVisibilityWithMessage:(NSUInteger)rowID {
 	[self _resetDiffingState];
 	[self.invalidConversationRowIDs addIndex:rowID];
-	FMResultSet *resultSet = [self.database executeQuery:@"select conversation_id, folder_idx from message where rowid = ?", @(rowID)];
+	FMResultSet *resultSet = [self.connection executeQuery:@"select conversation_id, folder_idx from message where rowid = ?", @(rowID)];
 	if ([resultSet next]) {
 		NSUInteger conversationID = [resultSet longLongIntForColumn:@"conversation_id"];
 		NSUInteger mailboxID = [resultSet longLongIntForColumn:@"folder_idx"];
@@ -2482,41 +2485,41 @@ PSTConversationCache *PSTSearchConversationCacheForConversationID(NSUInteger con
 		BOOL validConversation = NO;
 		BOOL isFacebookMessage = NO;
 		BOOL isTwitterNotification = NO;
-		if (_databaseFlags.conversationRowIDAdded != NO) {
-			FMResultSet *resultSet = [self.database executeQuery:@"select rowid from message where conversation_id = ?", @(convoID)];
+		if (_databaseFlags.conversationRowIDAdded) {
+			FMResultSet *resultSet = [self.connection executeQuery:@"select rowid from message where conversation_id = ?", @(convoID)];
 			validConversation = [resultSet next];
 			[resultSet close];
-			resultSet = [self.database executeQuery:@"select rowid, uid, folder_idx from message where conversation_id = ? and deleted = 0 and is_deleted = 0", @(convoID)];
+			resultSet = [self.connection executeQuery:@"select rowid, uid, folder_idx from message where conversation_id = ? and deleted = 0 and is_deleted = 0", @(convoID)];
 			PUISSANT_FMDB_ERROR_LOG
 			int idx = 0;
 			while ([resultSet next]) {
 				idx++;
 				if (![self.invalidConversationRowIDs containsIndex:convoID]) {
 					long long rowID = [resultSet longLongIntForColumn:@"rowid"];
-					MCOAbstractMessage *message = [self lookupCachedMessageAtRowIndex:rowID];
+					PSTSerializableMessage *message = [self lookupCachedMessageAtRowIndex:rowID];
 					if (!message) {
 						continue;
 					}
-					if ([(MCOIMAPMessage *)message uid] != 0) {
+					if (message.uid != 0) {
 						if (!isFacebookMessage && [message isFacebookNotification]) {
 							isFacebookMessage = YES;
 						} else if (!isTwitterNotification && [message isTwitterNotification]) {
 							isTwitterNotification = YES;
 						}
-						[newConversation addMessage:(PSTSerializableMessage *)message rowID:rowID folderID:folderIdentifier];
+						[newConversation addMessage:message rowID:rowID folderID:folderIdentifier];
 					}
 				}
 			}
 			[resultSet close];
 		}
 		if (validConversation == NO || newConversation.messages.count == 0) {
-			[self.database executeUpdate:@"delete from conversation where rowid = ?", [NSNumber numberWithLongLong:folderIdentifier]];
+			[self.connection executeUpdate:@"delete from conversation where rowid = ?", @(convoID)];
 			PUISSANT_FMDB_ERROR_LOG
 			[self.conversationsCache removeDataForIndex:convoID];
 			[self.pendingConversationCache removeObjectForKey:@(convoID)];
-			[self.database executeUpdate:@"delete from conversation_thread_id where conversation_id = ?", @(convoID)];
+			[self.connection executeUpdate:@"delete from conversation_thread_id where conversation_id = ?", @(convoID)];
 			PUISSANT_FMDB_ERROR_LOG
-			[self.database executeUpdate:@"delete from conversation_data where conversation_id = ?", @(convoID)];
+			[self.connection executeUpdate:@"delete from conversation_data where conversation_id = ?", @(convoID)];
 			PUISSANT_FMDB_ERROR_LOG
 			[self _resetDiffingState];
 			return;
@@ -2524,9 +2527,9 @@ PSTConversationCache *PSTSearchConversationCacheForConversationID(NSUInteger con
 		[self.pendingConversationCache setObject:newConversation forKey:@(convoID)];
 		if (folderIdentifier != 0) {
 			if (convoID != 0) {
-				FMResultSet *visibleQuery = [self.database executeQuery:@"select visible from conversation_data where conversation_id = ? and folder_idx = ?", @(convoID), @(folderIdentifier)];
+				FMResultSet *visibleQuery = [self.connection executeQuery:@"select visible from conversation_data where conversation_id = ? and folder_idx = ?", @(convoID), @(folderIdentifier)];
 				BOOL noVisibility = NO;
-				int flag = 0;
+				BOOL flag = 0;
 				if (![visibleQuery next]) {
 					flag = 1;
 				} else {
@@ -2539,16 +2542,16 @@ PSTConversationCache *PSTSearchConversationCacheForConversationID(NSUInteger con
 				}
 				[visibleQuery close];
 				[newConversation resolveDateUsingFolder:folderIdentifier];
-				if (noVisibility == NO) {
-					if (flag == NO) {
-						[self.database executeUpdate:@"update conversation_data set visible = 1, most_recent_message_date = ? where conversation_id = ? and folder_idx = ?", [NSDate date], @(convoID), @(folderIdentifier)];
+//				if (noVisibility == NO) {
+					if (flag == 0) {
+						[self.connection executeUpdate:@"update conversation_data set visible = 1, most_recent_message_date = ? where conversation_id = ? and folder_idx = ?", [NSDate date], @(convoID), @(folderIdentifier)];
 					} else {
-						[self.database executeUpdate:@"update conversation_data set most_recent_message_date = ? where conversation_id = ? and folder_idx = ?", [NSDate date], @(convoID), @(folderIdentifier)];
+						[self.connection executeUpdate:@"update conversation_data set most_recent_message_date = ? where conversation_id = ? and folder_idx = ?", [NSDate date], @(convoID), @(folderIdentifier)];
 					}
-					if (![self.database hadError]) {
+					if (![self.connection hadError]) {
 						[self _resetDiffingState];
-						[self.database executeUpdate:@"insert into conversation_data (conversation_id, folder_idx, most_recent_message_date, visible, action_step, is_facebook, is_twitter) values (?, ?, ?, 1, ?, ?, ?)", @(convoID), @(folderIdentifier), newConversation.date, @0, @(isFacebookMessage), @(isTwitterNotification)];
-						if ([self.database hadError]) {
+						[self.connection executeUpdate:@"insert into conversation_data (conversation_id, folder_idx, most_recent_message_date, visible, action_step, is_facebook, is_twitter) values (?, ?, ?, 1, 0, ?, ?)", @(convoID), @(folderIdentifier), newConversation.date, @(isFacebookMessage), @(isTwitterNotification)];
+						if ([self.connection hadError]) {
 							PUISSANT_FMDB_ERROR_LOG;
 							[self _resetDiffingState];
 						}
@@ -2557,19 +2560,19 @@ PSTConversationCache *PSTSearchConversationCacheForConversationID(NSUInteger con
 					}
 					PUISSANT_FMDB_ERROR_LOG;
 					return;
-				}
+//				}
 				
 			}
-			[self.database executeUpdate:@"delete from conversation_data where conversation_id = ? and folder_idx = ?", @(convoID), @(folderIdentifier)];
-			if (![self.database hadError]) {
+			[self.connection executeUpdate:@"delete from conversation_data where conversation_id = ? and folder_idx = ?", @(convoID), @(folderIdentifier)];
+			if (![self.connection hadError]) {
 				[self _resetDiffingState];
 			}
 			PUISSANT_FMDB_ERROR_LOG;
 			[self _resetDiffingState];
 			return;
 		}
-		[self.database executeUpdate:@"delete from conversation_data where conversation_id = ?", @(convoID)];
-		if (![self.database hadError]) {
+		[self.connection executeUpdate:@"delete from conversation_data where conversation_id = ?", @(convoID)];
+		if (![self.connection hadError]) {
 			[self _resetDiffingState];
 		}
 		PUISSANT_FMDB_ERROR_LOG;

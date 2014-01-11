@@ -588,13 +588,6 @@
 			remoteGlobalIDString = D05AD39417F2D56F0080895B;
 			remoteInfo = "ReactiveCocoa-Mac";
 		};
-		C9AD86241874B43B0046DB9A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C90C83321874B03E00E77CDE /* ReactiveCocoa.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 88037F8215056328001A5B19;
-			remoteInfo = ReactiveCocoa;
-		};
 		C9BDF7141874CD33002B70B5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 840477FF1739EECD009E8A81 /* Specta.xcodeproj */;
@@ -2138,7 +2131,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				C9AD86251874B43B0046DB9A /* PBXTargetDependency */,
 				8442BCAE176E270500F27E4D /* PBXTargetDependency */,
 				84986DCD174315E5001D7E88 /* PBXTargetDependency */,
 				84016B9516FE83C3004A012A /* PBXTargetDependency */,
@@ -2700,11 +2692,6 @@
 			isa = PBXTargetDependency;
 			target = 84C0890B16FA7A6B005ABB3E /* levelDB */;
 			targetProxy = 84C08A3916FA7BDF005ABB3E /* PBXContainerItemProxy */;
-		};
-		C9AD86251874B43B0046DB9A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ReactiveCocoa;
-			targetProxy = C9AD86241874B43B0046DB9A /* PBXContainerItemProxy */;
 		};
 		C9BDF7151874CD33002B70B5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

@@ -19,7 +19,6 @@
 #import <Puissant/PSTSerializableMessage.h>
 #import <Puissant/PSTLocalMessage.h>
 #import <Puissant/PSTLocalAttachment.h>
-#import <Puissant/PSTLEPMessage.h>
 
 #import <Puissant/PSTAttachmentCache.h>
 #import <Puissant/PSTLaunchServicesManager.h>
@@ -65,5 +64,9 @@
 #import <Puissant/NPReachability.h>
 
 #import <Puissant/MCOMessageHeader+PSTExtensions.h>
+
+#import <ReactiveCocoa/ReactiveCocoa.h>
+#import <ReactiveCocoa/EXTScope.h>
+
 
 #endif

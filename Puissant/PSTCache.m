@@ -31,9 +31,6 @@
 	id result = [self.cacheMap objectForKey:aKey];
 	if (result != nil) {
 		[self.indices setObject:@(self.count) forKey:aKey];
-		if (self.count >= self.maxSize) {
-			[self _pruneCacheMap];
-		}
 	}
 	return result;
 }
@@ -43,8 +40,6 @@
 	[self.cacheMap setObject:object forKey:aKey];
 	[self.indices setObject:@(self.count) forKey:aKey];
 	if (self.count != self.maxSize) return;
-	
-	[self _pruneCacheMap];
 }
 
 - (void)removeObjectForKey:(id)aKey {
@@ -71,13 +66,15 @@
 }
 
 - (void)_pruneCacheMap {
-	if (self.transactionCounter == 0) {
-		if (self.cacheMap.count >= self.maxSize) {
-			NSArray *sortedStorage = [self.cacheMap.allKeys sortedArrayUsingFunction:compare context:(__bridge void *)(self)];
-			for (NSUInteger i = self.count; i > self.maxSize; i--) {
-				[self.cacheMap removeObjectForKey:[sortedStorage objectAtIndex:i - 1]];
+	@synchronized(self) {
+		if (self.transactionCounter == 0) {
+			if (self.cacheMap.count >= self.maxSize) {
+				NSArray *sortedStorage = [self.cacheMap.allKeys sortedArrayUsingFunction:compare context:(__bridge void *)(self)];
+				for (NSUInteger i = self.count; i > self.maxSize; i--) {
+					[self.cacheMap removeObjectForKey:[sortedStorage objectAtIndex:i - 1]];
+				}
+				self.count = self.cacheMap.count;
 			}
-			self.count = self.cacheMap.count;
 		}
 	}
 }

@@ -35,6 +35,7 @@ NSString *const PSTMailAccountFetchedMessageNotification = @"PSTMailAccountFetch
 NSString *const PSTMailAccountFetchedNewMessageNotification = @"PSTMailAccountFetchedNewMessageNotification";
 NSString *const PSTMailAccountDraftSavedNotification = @"PSTMailAccountDraftSaved";
 NSString *const PSTMailAccountLocalDraftSavedNotification  = @"PSTMailAccountLocalDraftSavedNotification";
+NSString *const PSTMailAccountLabelColorsUpdatedNotification  = @"PSTMailAccountLabelColorsUpdatedNotification";
 NSString *const PSTMailAccountNotificationChanged = @"PSTMailAccountNotificationChanged";
 NSString *const PSTMailAccountCountUpdated = @"PSTMailAccountCountUpdated";
 NSString *const PSTMailAccountActionStepCountUpdated = @"PSTMailAccountActionStepCountUpdated";

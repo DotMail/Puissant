@@ -30,6 +30,7 @@ PUISSANT_EXPORT NSString *const PSTMailAccountFetchedMessageNotification;
 PUISSANT_EXPORT NSString *const PSTMailAccountFetchedNewMessageNotification;
 PUISSANT_EXPORT NSString *const PSTMailAccountDraftSavedNotification;
 PUISSANT_EXPORT NSString *const PSTMailAccountLocalDraftSavedNotification;
+PUISSANT_EXPORT NSString *const PSTMailAccountLabelColorsUpdatedNotification;
 
 //Keys to userInfo
 PUISSANT_EXPORT NSString *const PSTAccountKey;

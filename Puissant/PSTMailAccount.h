@@ -102,6 +102,29 @@ PUISSANT_EXPORT NSString *const PSTSpamFolderPathKey;
 - (MCOAddress *)addressValueWithName:(BOOL)name;
 
 /**
+ * Returns an array of all labels appropriate for showing to the
+ * user or that the user has explicitly enabled.
+ */
+- (NSArray *)visibleLabels;
+
+/**
+ * Returns an array of all labels.
+ */
+- (NSArray *)allLabels;
+
+/**
+ * Sets a given color for a label or string identifier.
+ */
+- (void)setColor:(NSColor *)color forLabel:(NSString *)label;
+
+/**
+ * Returns the color for a given label or string identifier.
+ */
+- (NSColor *)colorForLabel:(NSString *)label;
+
+
+
+/**
  * Flushes sync dates to a plist and halts the account's synchronizer.
  */
 - (void)save;
@@ -110,7 +133,6 @@ PUISSANT_EXPORT NSString *const PSTSpamFolderPathKey;
 
 - (void)checkNotifications;
 
-- (NSArray *)visibleLabels;
 
 - (void)deleteConversation:(PSTConversation *)conversation;
 

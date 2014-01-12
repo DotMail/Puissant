@@ -40,6 +40,8 @@ NSString *const PSTSpamFolderPathKey = @"PSTSpamFolderPathKey";
 - (RACSignal *)saveMessage:(id)message { return nil; }
 - (NSDictionary *)info { return nil; }
 - (MCOAddress *)addressValueWithName:(BOOL)name { return nil; }
+- (void)setColor:(NSColor *)color forLabel:(NSString *)label { }
+- (NSColor *)colorForLabel:(NSString *)label { return nil; }
 - (NSDictionary *)folders { return nil; }
 - (BOOL)hasDataForMessage:(MCOIMAPMessage *)message atPath:(NSString *)path { return NO; };
 - (NSData *)dataForMessage:(MCOIMAPMessage *)message atPath:(NSString *)path { return nil; };

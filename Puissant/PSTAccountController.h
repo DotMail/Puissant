@@ -90,6 +90,8 @@
  */
 @property (nonatomic, strong, readonly) NSArray *visibleLabels;
 
+@property (nonatomic, strong, readonly) NSArray *allLabels;
+
 
 @property (nonatomic, assign) BOOL loading;
 
@@ -114,6 +116,17 @@
  * Returns the cached count of all unread emails for all accounts.
  */
 - (NSUInteger)unreadCountForFolder:(PSTFolderType)folder;
+
+/**
+ * Sets a given color for a label or string identifier.
+ */
+- (void)setColor:(NSColor *)color forLabel:(NSString *)label;
+
+/**
+ * Returns the color for a given label or string identifier.
+ */
+- (NSColor *)colorForLabel:(NSString *)label;
+
 
 /*!
  * Runs a refresh synchronization series on all accounts.

@@ -58,12 +58,12 @@
 #import <Puissant/NSArray+StringifyAddress.h>
 #import <Puissant/ABRecord+CFIAdditions.h>
 #import <Puissant/NSApplication+PSTSystemAdditions.h>
+#import <Puissant/MCOMessageHeader+PSTExtensions.h>
+#import <Puissant/NSColor+PSTHexadecimalAdditions.h>
 
 #import <Puissant/PSTAddressBookManager.h>
 
 #import <Puissant/NPReachability.h>
-
-#import <Puissant/MCOMessageHeader+PSTExtensions.h>
 
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import <ReactiveCocoa/EXTScope.h>

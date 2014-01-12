@@ -266,6 +266,16 @@
 	return self.mainAccount.visibleLabels;
 }
 
+- (NSArray *)allLabels {
+	if (_accounts.count == 0) {
+		return @[];
+	}
+	if (_accounts.count >= 2) {
+		return @[];
+	}
+	return self.mainAccount.allLabels;
+}
+
 - (MCOAddress *)addressValueWithName:(BOOL)name {
 	return [self.mainAccount addressValueWithName:name];
 }
@@ -298,6 +308,14 @@
 		}
 	}
 	return retVal;
+}
+
+- (void)setColor:(NSColor *)color forLabel:(NSString *)label {
+	[self.mainAccount setColor:color forLabel:label];
+}
+
+- (NSColor *)colorForLabel:(NSString *)label {
+	return [self.mainAccount colorForLabel:label];
 }
 
 - (BOOL)loading {

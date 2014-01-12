@@ -70,7 +70,8 @@
 		if (self.transactionCounter == 0) {
 			if (self.cacheMap.count >= self.maxSize) {
 				NSArray *sortedStorage = [self.cacheMap.allKeys sortedArrayUsingFunction:compare context:(__bridge void *)(self)];
-				for (NSUInteger i = self.count; i > self.maxSize; i--) {
+				for (NSUInteger i = sortedStorage.count; i > self.maxSize; i--) {
+					
 					[self.cacheMap removeObjectForKey:[sortedStorage objectAtIndex:i - 1]];
 				}
 				self.count = self.cacheMap.count;

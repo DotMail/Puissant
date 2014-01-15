@@ -139,6 +139,8 @@
 		84C262C71638B2E400A64818 /* Puissant.h in Headers */ = {isa = PBXBuildFile; fileRef = 84C262C61638B2E400A64818 /* Puissant.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84C262D51638B6A500A64818 /* HTTPMultipartUpload.h in Headers */ = {isa = PBXBuildFile; fileRef = 84C262D31638B6A500A64818 /* HTTPMultipartUpload.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84C262D61638B6A500A64818 /* HTTPMultipartUpload.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C262D41638B6A500A64818 /* HTTPMultipartUpload.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		84D57E811887546F0054308C /* NSColor+PSTHexadecimalAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D57E7F1887546F0054308C /* NSColor+PSTHexadecimalAdditions.h */; };
+		84D57E821887546F0054308C /* NSColor+PSTHexadecimalAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D57E801887546F0054308C /* NSColor+PSTHexadecimalAdditions.m */; };
 		84D6CB5D18344D5900DD3C1B /* NSString+PSTSearch.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D6CB5B18344D5900DD3C1B /* NSString+PSTSearch.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84D6CB5E18344D5900DD3C1B /* NSString+PSTSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D6CB5C18344D5900DD3C1B /* NSString+PSTSearch.m */; };
 		84E1862216BE409200717FAA /* MCOAddress+PSTPrettification.h in Headers */ = {isa = PBXBuildFile; fileRef = 84E1862016BE409200717FAA /* MCOAddress+PSTPrettification.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -835,6 +837,8 @@
 		84C262C61638B2E400A64818 /* Puissant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Puissant.h; sourceTree = "<group>"; };
 		84C262D31638B6A500A64818 /* HTTPMultipartUpload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPMultipartUpload.h; sourceTree = "<group>"; };
 		84C262D41638B6A500A64818 /* HTTPMultipartUpload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPMultipartUpload.m; sourceTree = "<group>"; };
+		84D57E7F1887546F0054308C /* NSColor+PSTHexadecimalAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSColor+PSTHexadecimalAdditions.h"; sourceTree = "<group>"; };
+		84D57E801887546F0054308C /* NSColor+PSTHexadecimalAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSColor+PSTHexadecimalAdditions.m"; sourceTree = "<group>"; };
 		84D6CB5B18344D5900DD3C1B /* NSString+PSTSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+PSTSearch.h"; sourceTree = "<group>"; };
 		84D6CB5C18344D5900DD3C1B /* NSString+PSTSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+PSTSearch.m"; sourceTree = "<group>"; };
 		84E1862016BE409200717FAA /* MCOAddress+PSTPrettification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MCOAddress+PSTPrettification.h"; sourceTree = "<group>"; };
@@ -1199,6 +1203,8 @@
 				847749C217443CE000CA311B /* GTMDefines.h */,
 				847749C317443CE000CA311B /* GTMNSString+HTML.h */,
 				847749C417443CE000CA311B /* GTMNSString+HTML.m */,
+				84D57E7F1887546F0054308C /* NSColor+PSTHexadecimalAdditions.h */,
+				84D57E801887546F0054308C /* NSColor+PSTHexadecimalAdditions.m */,
 				84C262D31638B6A500A64818 /* HTTPMultipartUpload.h */,
 				84C262D41638B6A500A64818 /* HTTPMultipartUpload.m */,
 				84C262861638AF2300A64818 /* LoginItemsAE.c */,
@@ -1942,6 +1948,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				84C2625F1638AED900A64818 /* PSTConstants.h in Headers */,
+				84D57E811887546F0054308C /* NSColor+PSTHexadecimalAdditions.h in Headers */,
 				84EECFC6176EB46700AA826F /* MCOAbstractPart+LEPRecursiveAttachments.h in Headers */,
 				84EECFD0176EB61D00AA826F /* MCOMessageHeader+PSTExtensions.h in Headers */,
 				84E5621A1726DEA300387F51 /* FXKeychain.h in Headers */,
@@ -2561,6 +2568,7 @@
 				84C262B41638AF2800A64818 /* LoginItemsAE.c in Sources */,
 				C9EE65BD1874B80500949AE2 /* PSTAddAttachmentOperation.m in Sources */,
 				C9EE65DF1874B80500949AE2 /* PSTConversation.m in Sources */,
+				84D57E821887546F0054308C /* NSColor+PSTHexadecimalAdditions.m in Sources */,
 				C9EE66231874B80500949AE2 /* PSTNotificationHub.m in Sources */,
 				C9EE65D11874B80500949AE2 /* PSTImageMapTable.m in Sources */,
 				C9EE66251874B80500949AE2 /* PSTPopAccountSynchronizer.m in Sources */,

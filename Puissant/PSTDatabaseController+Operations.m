@@ -377,22 +377,9 @@ typedef NS_ENUM(int, PSTSearchOperationType) {
 	return retVal;
 }
 
-- (id)searchConversationsOperationWithTerms:(NSArray *)terms kind:(int)kind folder:(MCOIMAPFolder *)folder otherFolder:(MCOIMAPFolder *)otherFolder limit:(int)limit {
-	return [self _searchConversationsOperationWithTerms:terms kind:kind folder:folder otherFolder:otherFolder mode:PSTSearchOperationTypeAllMail limit:limit];
-}
-
-- (id)searchConversationsOperationWithTerms:(NSArray *)terms kind:(int)kind notInTrashFolder:(MCOIMAPFolder *)folder otherFolder:(MCOIMAPFolder *)otherFolder limit:(int)limit {
-	return [self _searchConversationsOperationWithTerms:terms kind:kind folder:folder otherFolder:otherFolder mode:PSTSearchOperationTypeExcludeTrash limit:limit];
-}
-
-- (id)_searchConversationsOperationWithTerms:(NSArray *)terms kind:(int)kind folder:(MCOIMAPFolder *)folder otherFolder:(MCOIMAPFolder *)otherFolder mode:(PSTSearchOperationType)mode limit:(int)limit {
+- (PSTSearchOperation *)searchConversationsOperationWithQuery:(NSString *)query {
 	PSTSearchOperation *retVal = [[PSTSearchOperation alloc] init];
-	retVal.searchTerms = terms;
-	retVal.kind = 0x10;
-	retVal.folder = folder;
-	retVal.otherFolder = otherFolder;
-	retVal.mode = mode;
-	retVal.limit = limit;
+	retVal.query = query;
 	[self _prepareOperation:retVal];
 	return retVal;
 }

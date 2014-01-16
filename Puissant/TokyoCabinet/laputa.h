@@ -28,11 +28,11 @@
 __LAPUTA_CLINKAGEBEGIN
 
 
-#include <tcutil.h>
-#include <tchdb.h>
-#include <tcbdb.h>
-#include <tcqdb.h>
-#include <tcwdb.h>
+#include "tcutil.h"
+#include "tchdb.h"
+#include "tcbdb.h"
+#include "tcqdb.h"
+#include "tcwdb.h"
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>

@@ -852,8 +852,8 @@ static NSArray *PSTDefaultLabelColorsList = nil;
 	[_imapSynchronizer sync];
 }
 
-- (void)searchWithTerms:(NSArray *)terms complete:(BOOL)complete searchStringToComplete:(NSAttributedString *)attributedString {
-	[_imapSynchronizer searchWithTerms:terms complete:complete searchStringToComplete:attributedString];
+- (void)searchWithQuery:(NSString *)query {
+	[_imapSynchronizer searchWithQuery:query];
 }
 
 - (NSArray *)searchSuggestions {

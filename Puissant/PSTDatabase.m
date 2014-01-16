@@ -33,8 +33,8 @@
 #import "MCOIMAPMessage+PSTExtensions.h"
 #import "PSTConstants.h"
 #import "PSTSerializableMessage.h"
-#import "PSTMessageIndex.h"
 #import "NSString+PSTSearch.h"
+#import "PSTSearchQueryTransformer.h"
 
 static NSArray *statements = nil;
 
@@ -56,8 +56,6 @@ PSTLog(@"%d: PSTMessageDatabase error %d: %@", __LINE__, [self.connection lastEr
 @property (atomic, strong) PSTLevelDBMapTable *flagsCache;
 @property (atomic, strong) PSTLevelDBMapTable *labelsCache;
 @property (strong) PSTLevelDBMapTable *previewCache;
-
-@property (atomic, strong) PSTMessageIndex *index;
 
 @property (nonatomic, strong) PSTCache *decodedMessageCache;
 @property (nonatomic, strong) PSTCache *oldestUIDForFolderCache;
@@ -223,17 +221,6 @@ PSTLog(@"%d: PSTMessageDatabase error %d: %@", __LINE__, [self.connection lastEr
 	self.connection = nil;
 	retval = NO;
 	return retval;
-}
-
-- (void)openIndex {
-	_index = [[PSTMessageIndex alloc] init];
-	_index.database = _connection;
-	_index.path = _path;
-	_index.delegate = self;
-	if ([_index openAndCheckConsistency]) {
-		[_index close];
-		_index = nil;
-	}
 }
 
 - (BOOL)_setupDatabase {
@@ -1934,10 +1921,48 @@ PSTLog(@"%d: PSTMessageDatabase error %d: %@", __LINE__, [self.connection lastEr
 	return [string dmMatchSearchStrings:searchStrings];
 }
 
-- (NSArray *)searchConversationsWithTerms:(NSArray *)searchTerms kind:(NSInteger)kind folder:(NSString *)folder
-							  otherFolder:(NSString *)otherFolder mainFolders:(NSDictionary *)mainFolders
-									 mode:(NSInteger)mode limit:(NSInteger)limit returningEverything:(BOOL)returningEverything {
-	return @[];
+- (NSArray *)search:(NSString *)query {
+	@synchronized(self) {
+		_databaseFlags.cancelConversations = NO;
+		_databaseFlags.conversationsStarted = YES;
+	}
+	NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
+	FMResultSet *resultSet = [self.connection executeQuery:[[NSValueTransformer valueTransformerForName:PSTQueryToSQLQueryTransformerName] transformedValue:query]];
+	PUISSANT_FMDB_ERROR_LOG;
+	@autoreleasepool {
+		BOOL cancelled;
+		while ([resultSet next] && cancelled == NO) {
+			long long conversationID = [resultSet longLongIntForColumn:@"conversation_id"];
+			NSDate *lastRecievedMessageDate = [resultSet dateForColumn:@"date"];
+			if (lastRecievedMessageDate == nil) {
+				lastRecievedMessageDate = [NSDate date];
+			}
+			PSTConversation *convo = [dict objectForKey:@(conversationID)];
+			if (convo != nil) {
+				if ([convo.sortDate compare:lastRecievedMessageDate] == NSOrderedDescending) {
+					[convo setSortDate:lastRecievedMessageDate];
+				}
+			} else {
+				PSTConversation *newConvo = [[PSTConversation alloc]init];
+				[newConvo setSortDate:lastRecievedMessageDate];
+				[newConvo setConversationID:@(conversationID)];
+				[dict setObject:newConvo forKey:@(conversationID)];
+			}
+			@synchronized(self) {
+				cancelled = _databaseFlags.cancelConversations;
+			}
+			if (cancelled == NO) {
+				continue;
+			}
+		}
+		[resultSet close];
+	}
+	@synchronized(self) {
+		_databaseFlags.cancelConversations = NO;
+		_databaseFlags.conversationsStarted = NO;
+	}
+	return [[dict allValues]sortedArrayUsingSelector:@selector(compare:)].mutableCopy;
+
 }
 
 #pragma mark - Private

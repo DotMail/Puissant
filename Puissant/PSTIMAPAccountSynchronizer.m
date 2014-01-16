@@ -380,7 +380,7 @@ static NSArray *PSTPathsForMessages(NSArray *messages);
 	return _searchSuggestionsTerms.allObjects;
 }
 
-- (void)searchWithTerms:(NSArray *)terms complete:(BOOL)complete searchStringToComplete:(NSAttributedString *)attributedString {
+- (void)searchWithQuery:(NSString *)query {
 	if (_currentSearchOperation) {
 		[self _cancelCurrentSearchOperation];
 	}
@@ -396,15 +396,7 @@ static NSArray *PSTPathsForMessages(NSArray *messages);
 		_searchSuggestionsMailboxes = nil;
 	});
 	[self.hiddenConversations removeAllIndexes];
-	self.searchTerms = terms;
-	if ([self isSelectedFolderAvailable:_allMailFolder]) {
-		_currentSearchOperation = [self.databaseController searchConversationsOperationWithTerms:terms kind:0x10 folder:self.allMailFolder otherFolder:self.inboxFolder limit:0x64];
-	} else {
-		_currentSearchOperation = [self.databaseController searchConversationsOperationWithTerms:terms kind:0x10 notInTrashFolder:self.trashFolder otherFolder:self.inboxFolder limit:0x64];
-	}
-	[_currentSearchOperation setSearchStringToComplete:attributedString];
-	[_currentSearchOperation setNeedsSuggestions:complete];
-	[_currentSearchOperation setMainFolders:[self _mainFolders]];
+	_currentSearchOperation = [self.databaseController searchConversationsOperationWithQuery:query];
 	[_currentSearchOperation start:^(BOOL hasSuggestions, NSMutableSet *bysubject, NSMutableSet *bymailbox, NSMutableSet *byname) {
 		if (hasSuggestions) {
 			PSTPropogateValueForKey(self.searchSuggestions, {
@@ -596,16 +588,16 @@ static NSArray *PSTPathsForMessages(NSArray *messages);
 }
 
 - (void)storageOperationDidUpdateState:(PSTStorageOperation *)op {
-	PSTPropogateValueForKey(self.currentSearchResult, {
-		NSMutableArray *result = @[].mutableCopy;
-		for (PSTConversation *convo in ((PSTSearchOperation *)_currentSearchOperation).conversations) {
-			if (![self.hiddenConversations containsIndex:convo.conversationID]) {
-				[result addObject:convo];
-				[convo setStorage:self.databaseController];
-			}
-		}
-		self.currentSearchResult = result;
-	});
+//	PSTPropogateValueForKey(self.currentSearchResult, {
+//		NSMutableArray *result = @[].mutableCopy;
+//		for (PSTConversation *convo in ((PSTSearchOperation *)_currentSearchOperation).conversations) {
+//			if (![self.hiddenConversations containsIndex:convo.conversationID]) {
+//				[result addObject:convo];
+//				[convo setStorage:self.databaseController];
+//			}
+//		}
+//		self.currentSearchResult = result;
+//	});
 }
 
 - (NSUInteger)countForFolder:(MCOIMAPFolder *)folder {

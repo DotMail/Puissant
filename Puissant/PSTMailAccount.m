@@ -59,6 +59,7 @@ NSString *const PSTSpamFolderPathKey = @"PSTSpamFolderPathKey";
 - (void)searchWithTerms:(NSArray *)terms complete:(BOOL)complete searchStringToComplete:(NSAttributedString *)attributedString { }
 - (void)cancelSearch { }
 - (NSArray *)searchSuggestions { return nil; }
+- (NSArray *)allLabels { return nil; }
 - (void)save { }
 - (void)remove { }
 - (NSArray *)visibleLabels { return nil; }

@@ -185,7 +185,7 @@ PUISSANT_TODO(Replace with archiving MCOIMAPMessage directly)
 		[templateValues setObject:[NSString stringWithFormat:@"to %@", mainAccount.name] forKey:@"MESSAGE_TO_SHORT_RECIPIENT"];
 	}
 
-	NSString *bodyHTML = [self bodyHTMLRenderingWithAccount:mainAccount withWebView:nil hideQuoted:YES enableActivity:YES printing:NO inlineAttachmentEnabled:NO];
+	NSString *bodyHTML = [self bodyHTMLRenderingWithAccount:mainAccount withWebView:nil];
 	[templateValues setObject:bodyHTML forKey:@"MESSAGE_BODY"];
 
 	NSMutableArray *messageParts = @[].mutableCopy;
@@ -200,7 +200,7 @@ PUISSANT_TODO(Replace with archiving MCOIMAPMessage directly)
 	return templateValues;
 }
 
-- (NSString *)bodyHTMLRenderingWithAccount:(PSTMailAccount *)account withWebView:(WebView *)webview hideQuoted:(BOOL)hide enableActivity:(BOOL)activity printing:(BOOL)printing inlineAttachmentEnabled:(BOOL)inlineEnabled {
+- (NSString *)bodyHTMLRenderingWithAccount:(PSTMailAccount *)account withWebView:(WebView *)webview {
 	NSMutableString *bodyString = [[NSMutableString alloc] init];
 	
 	PSTMailAccount *mainAccount = account;
@@ -208,7 +208,7 @@ PUISSANT_TODO(Replace with archiving MCOIMAPMessage directly)
 		mainAccount = ((PSTAccountController *)account).mainAccount;
 	}
 	if (![mainAccount hasDataForMessage:(MCOIMAPMessage *)self atPath:[self dm_folder].path]) {
-		return [self mmHTMLPlaceholderShowActivity:activity];
+		return @"";
 	} else {
 		char *cStr = (char *)[mainAccount dataForAttachment:PSTPreferredIMAPPart(self.mainParts) onMessage:(MCOIMAPMessage *)self atPath:[self dm_folder].path].bytes;
 		if (cStr == NULL) cStr = "";
@@ -219,16 +219,6 @@ PUISSANT_TODO(Replace with archiving MCOIMAPMessage directly)
 		if (rendering.length) [bodyString appendString:[rendering mco_cleanedHTMLString]];
 	}
 	return bodyString;
-}
-
-- (NSString *)mmHTMLPlaceholderShowActivity:(BOOL)verbose {
-	NSMutableString *html = [NSMutableString string];
-	if (verbose) {
-		[html appendFormat:@"<p style=\"text-align:left; color: #a0a0a0a0;\">%@</p>", @"The content of this message has not been downloaded yet."];
-	} else {
-		[html appendFormat:@"<div id=\"spinner\"><p style=\"text-align:left; color: #a0a0a0; font-weight: bold;\">Loading</p></div>"];
-	}
-	return html;
 }
 
 @end

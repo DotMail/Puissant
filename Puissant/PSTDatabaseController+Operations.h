@@ -110,8 +110,7 @@
 - (PSTMessagesUIDOperation *)messagesOperationForFolder:(MCOIMAPFolder *)folder;
 - (PSTRemoveNonExistingMessagesOperation *)removeNonExistantMessagesOperation:(NSArray *)messages uidsSet:(NSIndexSet *)uidsSet folder:(MCOIMAPFolder *)folder;
 
-- (PSTSearchOperation *)searchConversationsOperationWithTerms:(NSArray *)terms kind:(int)kind folder:(MCOIMAPFolder *)folder otherFolder:(MCOIMAPFolder *)otherFolder limit:(int)limit;
-- (PSTSearchOperation *)searchConversationsOperationWithTerms:(NSArray *)terms kind:(int)kind notInTrashFolder:(MCOIMAPFolder *)folder otherFolder:(MCOIMAPFolder *)otherFolder limit:(int)limit;
+- (PSTSearchOperation *)searchConversationsOperationWithQuery:(NSString *)query;
 
 - (PSTUpdateCountOperation *)updateCachedUnseenCountOperation:(MCOIMAPFolder *)folder;
 - (PSTUpdateCountOperation *)updateCachedCountOperation:(MCOIMAPFolder *)folder;

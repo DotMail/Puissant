@@ -54,7 +54,7 @@
 //Cancels the currently occuring synchronization series
 - (void)invalidateSynchronizer;
 - (void)waitUntilAllOperationsHaveFinished;
-- (void)searchWithTerms:(NSArray *)terms complete:(BOOL)complete searchStringToComplete:(NSAttributedString *)attributedString;
+- (void)searchWithQuery:(NSString *)query;
 - (NSArray *)searchSuggestions;
 - (void)cancelSearch;
 - (void)cancelRemoteSearch;

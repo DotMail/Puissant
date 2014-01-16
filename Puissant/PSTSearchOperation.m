@@ -33,35 +33,31 @@
 }
 
 - (void)mainRequest {
+	NSArray *conversations = [self.database search:self.query];
 	if (self.isCancelled) return;
-	[self.database beginTransaction];
-	[self.database commit];
-	if (self.isCancelled) return;
-	self.conversations = [self.database searchConversationsWithTerms:self.searchTerms kind:self.kind folder:self.folder.path otherFolder:self.otherFolder.path mainFolders:self.mainFolders mode:self.mode limit:self.limit returningEverything:NO];
-	if (self.isCancelled) return;
-	if (!self.needsSuggestions) return;
-	[self performSelectorOnMainThread:@selector(_showResults) withObject:Nil waitUntilDone:YES];
-	NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc]init];
-	for (PSTConversation *conversation in self.conversations) {
-		[indexSet addIndex:conversation.conversationID];
-	}
-	NSArray *searchStrings = [self.searchStringToComplete.string componentsSeparatedByString:@" "];
-	[indexSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
-		PSTConversationCache *cache = [self.database rawConversationCacheForConversationID:idx];
-		[cache resolveCachedSendersAndRecipients];
-		for (MCOAddress *address in cache.senders) {
-			
-		}
-		for (MCOAddress *address in cache.recipients) {
-			
-		}
-		
-		if (cache.subject.lowercaseString) {
-			if ([self.database matchSearchStrings:searchStrings withString:cache.subject.lowercaseString]) {
-				[suggestedSubjects addObject:cache.subject];
-			}
-		}
-	}];
+//	if (!self.needsSuggestions) return;
+//	[self performSelectorOnMainThread:@selector(_showResults) withObject:Nil waitUntilDone:YES];
+//	NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc]init];
+//	for (PSTConversation *conversation in self.conversations) {
+//		[indexSet addIndex:conversation.conversationID];
+//	}
+//	NSArray *searchStrings = [self.searchStringToComplete.string componentsSeparatedByString:@" "];
+//	[indexSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+//		PSTConversationCache *cache = [self.database rawConversationCacheForConversationID:idx];
+//		[cache resolveCachedSendersAndRecipients];
+//		for (MCOAddress *address in cache.senders) {
+//			
+//		}
+//		for (MCOAddress *address in cache.recipients) {
+//			
+//		}
+//		
+//		if (cache.subject.lowercaseString) {
+//			if ([self.database matchSearchStrings:searchStrings withString:cache.subject.lowercaseString]) {
+//				[suggestedSubjects addObject:cache.subject];
+//			}
+//		}
+//	}];
 }
 
 - (void)addAddressSuggestion:(MCOAddress *)address peopleByMailbox:(NSMutableSet *)peopleByMailbox peopleByName:(NSMutableSet *)peopleByName searchStrings:(NSArray *)strings peopleUniquer:(NSMutableSet *)peopleUniquer mailboxUniquer:(NSMutableSet *)mailboxUniquer {
@@ -84,7 +80,7 @@
 
 - (void)mainFinished {
 	if (_callback) {
-		_callback(self.needsSuggestions, suggestedSubjects, suggestedPeopleByMailbox, suggestedPeopleByDisplayName);
+		_callback(NO, suggestedSubjects, suggestedPeopleByMailbox, suggestedPeopleByDisplayName);
 	}
 }
 

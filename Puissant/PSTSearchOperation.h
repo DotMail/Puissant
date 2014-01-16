@@ -14,17 +14,6 @@
 
 - (void)start:(void(^)(BOOL, NSMutableSet *, NSMutableSet *, NSMutableSet *))callback;
 
-@property (nonatomic, copy) NSArray *searchTerms;
-@property (nonatomic) NSInteger kind;
-@property (nonatomic, copy) MCOIMAPFolder *folder;
-@property (nonatomic, copy) MCOIMAPFolder *otherFolder;
-@property (nonatomic) NSInteger mode;
-@property (nonatomic) NSInteger limit;
-@property (nonatomic, strong) NSDictionary *mainFolders;
-@property (nonatomic) BOOL returnedEverything;
+@property (nonatomic, copy) NSString *query;
 
-@property (nonatomic, copy) NSAttributedString *searchStringToComplete;
-@property (nonatomic, strong) NSArray *conversations;
-
-@property (nonatomic) BOOL needsSuggestions;
 @end

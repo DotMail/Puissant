@@ -282,7 +282,7 @@ typedef NS_ENUM (NSInteger, PSTDatabaseType) {
 @interface PSTDatabase (PSTSearchOperations)
 
 - (BOOL)matchSearchStrings:(NSArray *)searchStrings withString:(NSString *)string;
-- (NSArray *)searchConversationsWithTerms:(NSArray *)searchTerms kind:(NSInteger)kind folder:(NSString *)folder otherFolder:(NSString *)otherFolder mainFolders:(NSDictionary *)mainFolders mode:(NSInteger)mode limit:(NSInteger)limit returningEverything:(BOOL)returningEverything;
+- (NSArray *)search:(NSString *)query;
 
 @end
 

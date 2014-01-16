@@ -35,5 +35,5 @@
 - (NSString *)uniqueMessageIdentifer;
 
 - (NSDictionary *)templateValuesWithAccount:(PSTMailAccount *)account withUUID:(NSString *)uuid;
-- (NSString *)bodyHTMLRenderingWithAccount:(PSTMailAccount *)account withWebView:(WebView *)webview hideQuoted:(BOOL)hide enableActivity:(BOOL)activity printing:(BOOL)printing inlineAttachmentEnabled:(BOOL)inlineEnabled;
+- (NSString *)bodyHTMLRenderingWithAccount:(PSTMailAccount *)account withWebView:(WebView *)webview;
 @end

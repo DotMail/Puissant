@@ -141,6 +141,8 @@
 		84C262D61638B6A500A64818 /* HTTPMultipartUpload.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C262D41638B6A500A64818 /* HTTPMultipartUpload.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		84D57E811887546F0054308C /* NSColor+PSTHexadecimalAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D57E7F1887546F0054308C /* NSColor+PSTHexadecimalAdditions.h */; };
 		84D57E821887546F0054308C /* NSColor+PSTHexadecimalAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D57E801887546F0054308C /* NSColor+PSTHexadecimalAdditions.m */; };
+		84D57EE61887627A0054308C /* PSTSearchQueryTransformer.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D57EE41887627A0054308C /* PSTSearchQueryTransformer.h */; };
+		84D57EE71887627A0054308C /* PSTSearchQueryTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D57EE51887627A0054308C /* PSTSearchQueryTransformer.m */; };
 		84D6CB5D18344D5900DD3C1B /* NSString+PSTSearch.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D6CB5B18344D5900DD3C1B /* NSString+PSTSearch.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84D6CB5E18344D5900DD3C1B /* NSString+PSTSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D6CB5C18344D5900DD3C1B /* NSString+PSTSearch.m */; };
 		84E1862216BE409200717FAA /* MCOAddress+PSTPrettification.h in Headers */ = {isa = PBXBuildFile; fileRef = 84E1862016BE409200717FAA /* MCOAddress+PSTPrettification.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -236,10 +238,6 @@
 		C9EE65E71874B80500949AE2 /* PSTDatabaseController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EE65471874B80500949AE2 /* PSTDatabaseController.m */; };
 		C9EE65E81874B80500949AE2 /* PSTDatabaseController+Operations.h in Headers */ = {isa = PBXBuildFile; fileRef = C9EE65481874B80500949AE2 /* PSTDatabaseController+Operations.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C9EE65E91874B80500949AE2 /* PSTDatabaseController+Operations.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EE65491874B80500949AE2 /* PSTDatabaseController+Operations.m */; };
-		C9EE65EB1874B80500949AE2 /* PSTDystopiaSearchIndex.h in Headers */ = {isa = PBXBuildFile; fileRef = C9EE654B1874B80500949AE2 /* PSTDystopiaSearchIndex.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C9EE65EC1874B80500949AE2 /* PSTDystopiaSearchIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EE654C1874B80500949AE2 /* PSTDystopiaSearchIndex.m */; };
-		C9EE65ED1874B80500949AE2 /* PSTDystopiaSearchMetaDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9EE654D1874B80500949AE2 /* PSTDystopiaSearchMetaDatabase.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C9EE65EE1874B80500949AE2 /* PSTDystopiaSearchMetaDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EE654E1874B80500949AE2 /* PSTDystopiaSearchMetaDatabase.m */; };
 		C9EE65EF1874B80500949AE2 /* PSTFlagsUpdateBatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = C9EE654F1874B80500949AE2 /* PSTFlagsUpdateBatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C9EE65F01874B80500949AE2 /* PSTFlagsUpdateBatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EE65501874B80500949AE2 /* PSTFlagsUpdateBatcher.m */; };
 		C9EE65F11874B80500949AE2 /* PSTIMAPAccountSynchronizer.h in Headers */ = {isa = PBXBuildFile; fileRef = C9EE65511874B80500949AE2 /* PSTIMAPAccountSynchronizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -272,8 +270,6 @@
 		C9EE66141874B80500949AE2 /* PSTMailAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EE65741874B80500949AE2 /* PSTMailAccount.m */; };
 		C9EE66151874B80500949AE2 /* PSTMarkMessagesAsDeletedOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = C9EE65751874B80500949AE2 /* PSTMarkMessagesAsDeletedOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C9EE66161874B80500949AE2 /* PSTMarkMessagesAsDeletedOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EE65761874B80500949AE2 /* PSTMarkMessagesAsDeletedOperation.m */; };
-		C9EE66181874B80500949AE2 /* PSTMessageIndex.h in Headers */ = {isa = PBXBuildFile; fileRef = C9EE65781874B80500949AE2 /* PSTMessageIndex.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C9EE66191874B80500949AE2 /* PSTMessageIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EE65791874B80500949AE2 /* PSTMessageIndex.m */; };
 		C9EE661A1874B80500949AE2 /* PSTMessagesUIDOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = C9EE657A1874B80500949AE2 /* PSTMessagesUIDOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C9EE661B1874B80500949AE2 /* PSTMessagesUIDOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EE657B1874B80500949AE2 /* PSTMessagesUIDOperation.m */; };
 		C9EE661C1874B80500949AE2 /* PSTMimeManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C9EE657C1874B80500949AE2 /* PSTMimeManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -839,6 +835,8 @@
 		84C262D41638B6A500A64818 /* HTTPMultipartUpload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPMultipartUpload.m; sourceTree = "<group>"; };
 		84D57E7F1887546F0054308C /* NSColor+PSTHexadecimalAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSColor+PSTHexadecimalAdditions.h"; sourceTree = "<group>"; };
 		84D57E801887546F0054308C /* NSColor+PSTHexadecimalAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSColor+PSTHexadecimalAdditions.m"; sourceTree = "<group>"; };
+		84D57EE41887627A0054308C /* PSTSearchQueryTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTSearchQueryTransformer.h; sourceTree = "<group>"; };
+		84D57EE51887627A0054308C /* PSTSearchQueryTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTSearchQueryTransformer.m; sourceTree = "<group>"; };
 		84D6CB5B18344D5900DD3C1B /* NSString+PSTSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+PSTSearch.h"; sourceTree = "<group>"; };
 		84D6CB5C18344D5900DD3C1B /* NSString+PSTSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+PSTSearch.m"; sourceTree = "<group>"; };
 		84E1862016BE409200717FAA /* MCOAddress+PSTPrettification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MCOAddress+PSTPrettification.h"; sourceTree = "<group>"; };
@@ -925,10 +923,6 @@
 		C9EE65471874B80500949AE2 /* PSTDatabaseController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTDatabaseController.m; sourceTree = "<group>"; };
 		C9EE65481874B80500949AE2 /* PSTDatabaseController+Operations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PSTDatabaseController+Operations.h"; sourceTree = "<group>"; };
 		C9EE65491874B80500949AE2 /* PSTDatabaseController+Operations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PSTDatabaseController+Operations.m"; sourceTree = "<group>"; };
-		C9EE654B1874B80500949AE2 /* PSTDystopiaSearchIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTDystopiaSearchIndex.h; sourceTree = "<group>"; };
-		C9EE654C1874B80500949AE2 /* PSTDystopiaSearchIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTDystopiaSearchIndex.m; sourceTree = "<group>"; };
-		C9EE654D1874B80500949AE2 /* PSTDystopiaSearchMetaDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTDystopiaSearchMetaDatabase.h; sourceTree = "<group>"; };
-		C9EE654E1874B80500949AE2 /* PSTDystopiaSearchMetaDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTDystopiaSearchMetaDatabase.m; sourceTree = "<group>"; };
 		C9EE654F1874B80500949AE2 /* PSTFlagsUpdateBatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTFlagsUpdateBatcher.h; sourceTree = "<group>"; };
 		C9EE65501874B80500949AE2 /* PSTFlagsUpdateBatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTFlagsUpdateBatcher.m; sourceTree = "<group>"; };
 		C9EE65511874B80500949AE2 /* PSTIMAPAccountSynchronizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTIMAPAccountSynchronizer.h; sourceTree = "<group>"; };
@@ -961,8 +955,6 @@
 		C9EE65741874B80500949AE2 /* PSTMailAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTMailAccount.m; sourceTree = "<group>"; };
 		C9EE65751874B80500949AE2 /* PSTMarkMessagesAsDeletedOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTMarkMessagesAsDeletedOperation.h; sourceTree = "<group>"; };
 		C9EE65761874B80500949AE2 /* PSTMarkMessagesAsDeletedOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTMarkMessagesAsDeletedOperation.m; sourceTree = "<group>"; };
-		C9EE65781874B80500949AE2 /* PSTMessageIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTMessageIndex.h; sourceTree = "<group>"; };
-		C9EE65791874B80500949AE2 /* PSTMessageIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTMessageIndex.m; sourceTree = "<group>"; };
 		C9EE657A1874B80500949AE2 /* PSTMessagesUIDOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTMessagesUIDOperation.h; sourceTree = "<group>"; };
 		C9EE657B1874B80500949AE2 /* PSTMessagesUIDOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTMessagesUIDOperation.m; sourceTree = "<group>"; };
 		C9EE657C1874B80500949AE2 /* PSTMimeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTMimeManager.h; sourceTree = "<group>"; };
@@ -1585,6 +1577,15 @@
 			name = FXKeychain;
 			sourceTree = "<group>";
 		};
+		84D57EE31887624E0054308C /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				84D57EE41887627A0054308C /* PSTSearchQueryTransformer.h */,
+				84D57EE51887627A0054308C /* PSTSearchQueryTransformer.m */,
+			);
+			name = Search;
+			sourceTree = "<group>";
+		};
 		84F688931687E14A0006D83E /* External */ = {
 			isa = PBXGroup;
 			children = (
@@ -1684,19 +1685,6 @@
 				C9EE65991874B80500949AE2 /* PSTSearchParser.m */,
 				C9EE659A1874B80500949AE2 /* PSTSearchTerm.h */,
 				C9EE659B1874B80500949AE2 /* PSTSearchTerm.m */,
-			);
-			name = Search;
-			sourceTree = "<group>";
-		};
-		C9BDF71D1874D7AA002B70B5 /* Search */ = {
-			isa = PBXGroup;
-			children = (
-				C9EE65781874B80500949AE2 /* PSTMessageIndex.h */,
-				C9EE65791874B80500949AE2 /* PSTMessageIndex.m */,
-				C9EE654B1874B80500949AE2 /* PSTDystopiaSearchIndex.h */,
-				C9EE654C1874B80500949AE2 /* PSTDystopiaSearchIndex.m */,
-				C9EE654D1874B80500949AE2 /* PSTDystopiaSearchMetaDatabase.h */,
-				C9EE654E1874B80500949AE2 /* PSTDystopiaSearchMetaDatabase.m */,
 			);
 			name = Search;
 			sourceTree = "<group>";
@@ -1840,7 +1828,7 @@
 				C9EE65451874B80500949AE2 /* PSTDatabase.m */,
 				C9BDF71A1874D61C002B70B5 /* Models */,
 				C9EE665A1874C74C00949AE2 /* Caches */,
-				C9BDF71D1874D7AA002B70B5 /* Search */,
+				84D57EE31887624E0054308C /* Search */,
 			);
 			name = Database;
 			sourceTree = "<group>";
@@ -1962,7 +1950,6 @@
 				C9EE65B81874B80500949AE2 /* PSTActivity.h in Headers */,
 				C9EE65F11874B80500949AE2 /* PSTIMAPAccountSynchronizer.h in Headers */,
 				C9EE661A1874B80500949AE2 /* PSTMessagesUIDOperation.h in Headers */,
-				C9EE65EB1874B80500949AE2 /* PSTDystopiaSearchIndex.h in Headers */,
 				C9EE65EF1874B80500949AE2 /* PSTFlagsUpdateBatcher.h in Headers */,
 				C9EE65BC1874B80500949AE2 /* PSTAddAttachmentOperation.h in Headers */,
 				84EECFDA176EC6E800AA826F /* MCOIMAPMessage+PSTExtensions.h in Headers */,
@@ -1977,7 +1964,6 @@
 				C9EE65D21874B80500949AE2 /* PSTCache.h in Headers */,
 				C9EE663E1874B80500949AE2 /* PSTSerializablePart.h in Headers */,
 				C9EE66381874B80500949AE2 /* PSTSearchParser.h in Headers */,
-				C9EE66181874B80500949AE2 /* PSTMessageIndex.h in Headers */,
 				C9EE65CC1874B80500949AE2 /* PSTAvatarFetchOperation.h in Headers */,
 				C9EE66401874B80500949AE2 /* PSTStorageOperation.h in Headers */,
 				C9EE664C1874B80500949AE2 /* PSTUserDefaults.h in Headers */,
@@ -2002,6 +1988,7 @@
 				C9EE65C41874B80500949AE2 /* PSTAddressBookManager.h in Headers */,
 				C9EE65CE1874B80500949AE2 /* PSTAvatarImageManager.h in Headers */,
 				C9EE661E1874B80500949AE2 /* PSTModifiedMessagesOperation.h in Headers */,
+				84D57EE61887627A0054308C /* PSTSearchQueryTransformer.h in Headers */,
 				C9EE65D41874B80500949AE2 /* PSTCachedMessage.h in Headers */,
 				C9EE66361874B80500949AE2 /* PSTSearchOperation.h in Headers */,
 				C9EE65F71874B80500949AE2 /* PSTIncompleteMessagesUIDOperation.h in Headers */,
@@ -2026,7 +2013,6 @@
 				C9EE65CA1874B80500949AE2 /* PSTAttachmentFetchOperation.h in Headers */,
 				84EECFD5176EC03E00AA826F /* MCOIMAPSession+PSTExtensions.h in Headers */,
 				8481CEAB17248C5200E0B8DF /* NSImage+PSTBase64.h in Headers */,
-				C9EE65ED1874B80500949AE2 /* PSTDystopiaSearchMetaDatabase.h in Headers */,
 				C9EE65F91874B80500949AE2 /* PSTIndexedMapTable.h in Headers */,
 				C9EE65BE1874B80500949AE2 /* PSTAddMessageContentOperation.h in Headers */,
 				C9EE66461874B80500949AE2 /* PSTUpdateCountOperation.h in Headers */,
@@ -2632,7 +2618,6 @@
 				84E1862316BE409200717FAA /* MCOAddress+PSTPrettification.m in Sources */,
 				C9EE65CD1874B80500949AE2 /* PSTAvatarFetchOperation.m in Sources */,
 				C9EE65AF1874B80500949AE2 /* PSTAccountSynchronizer.m in Sources */,
-				C9EE66191874B80500949AE2 /* PSTMessageIndex.m in Sources */,
 				C9EE66311874B80500949AE2 /* PSTRemoveNonExistingMessagesOperation.m in Sources */,
 				843F415B16E2D1BF00DEE8AB /* StandardPaths.m in Sources */,
 				8481CEAC17248C5200E0B8DF /* NSImage+PSTBase64.m in Sources */,
@@ -2641,10 +2626,8 @@
 				C9EE66101874B80500949AE2 /* PSTLocalDraftMessagesOperation.m in Sources */,
 				C9EE65E51874B80500949AE2 /* PSTDatabase.m in Sources */,
 				84E5621B1726DEA300387F51 /* FXKeychain.m in Sources */,
-				C9EE65EE1874B80500949AE2 /* PSTDystopiaSearchMetaDatabase.m in Sources */,
 				847749C717443CE000CA311B /* GTMNSString+HTML.m in Sources */,
 				84D6CB5E18344D5900DD3C1B /* NSString+PSTSearch.m in Sources */,
-				C9EE65EC1874B80500949AE2 /* PSTDystopiaSearchIndex.m in Sources */,
 				84339B221751672A00FCC06C /* NSIndexSet+PSTOperators.m in Sources */,
 				C9EE65E11874B80500949AE2 /* PSTConversationCache.m in Sources */,
 				C9EE65CF1874B80500949AE2 /* PSTAvatarImageManager.m in Sources */,
@@ -2654,6 +2637,7 @@
 				84339B33175178E100FCC06C /* FMDatabasePool.m in Sources */,
 				84339B35175178E100FCC06C /* FMDatabaseQueue.m in Sources */,
 				C9EE663D1874B80500949AE2 /* PSTSerializableMessage.m in Sources */,
+				84D57EE71887627A0054308C /* PSTSearchQueryTransformer.m in Sources */,
 				84339B38175178E100FCC06C /* FMResultSet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

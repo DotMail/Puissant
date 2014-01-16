@@ -28,10 +28,10 @@
 __TCWDB_CLINKAGEBEGIN
 
 
-#include <tcutil.h>
-#include <tchdb.h>
-#include <tcbdb.h>
-#include <tcqdb.h>
+#include "tcutil.h"
+#include "tchdb.h"
+#include "tcbdb.h"
+#include "tcqdb.h"
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>

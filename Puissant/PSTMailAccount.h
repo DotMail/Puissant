@@ -42,7 +42,7 @@ PUISSANT_EXPORT NSString *const PSTSpamFolderPathKey;
  * permit archiving.  Note: The class does not serialize the -password property,
  * as that should be stored in the keychain.
  */
-@property (nonatomic, strong, readonly) NSDictionary *info;
+- (NSDictionary *)dictionaryValue;
 
 /**
  * The display name of this account.
@@ -90,16 +90,53 @@ PUISSANT_EXPORT NSString *const PSTSpamFolderPathKey;
 - (void)refreshSync;
 
 /**
- * Adds the current message to the send queue.
+ * 
  */
-- (RACSignal *)sendMessage:(id)message;
+- (void)checkNotifications;
 
-- (RACSignal *)saveMessage:(id)message;
+
+
+/**
+ * Sends a given MailCore message.
+ */
+- (void)sendMessage:(id)message completion:(void(^)())completion;
+
+/**
+ * Writes a given MailCore message to disk.
+ */
+- (void)saveMessage:(id)message completion:(void(^)())completion;
+
+
 
 /**
  * Returns the account's email as a MCOAddress or nil if one cannot be created.
  */
 - (MCOAddress *)addressValueWithName:(BOOL)name;
+
+
+/**
+ * Flushes sync dates to a plist and halts the account's synchronizer.
+ */
+- (void)save;
+
+/**
+ * Permanently removes all files and state associated with a given account and stops all pending
+ * operations running against that account.
+ */
+- (void)remove;
+
+
+- (void)deleteConversation:(PSTConversation *)conversation;
+
+@property (nonatomic, copy) NSString *htmlSignature;
+@property (nonatomic, copy) NSString *selectedLabel;
+@property (nonatomic, assign) PSTFolderType selected;
+@property (nonatomic, assign) BOOL notificationsEnabled;
+@property (nonatomic, assign) BOOL loading;
+
+@end
+
+@interface PSTMailAccount (PSTXLIST)
 
 /**
  * Returns an array of all labels appropriate for showing to the
@@ -112,6 +149,8 @@ PUISSANT_EXPORT NSString *const PSTSpamFolderPathKey;
  */
 - (NSArray *)allLabels;
 
+
+
 /**
  * Sets a given color for a label or string identifier.
  */
@@ -122,26 +161,6 @@ PUISSANT_EXPORT NSString *const PSTSpamFolderPathKey;
  */
 - (NSColor *)colorForLabel:(NSString *)label;
 
-
-
-/**
- * Flushes sync dates to a plist and halts the account's synchronizer.
- */
-- (void)save;
-
-- (void)remove;
-
-- (void)checkNotifications;
-
-
-- (void)deleteConversation:(PSTConversation *)conversation;
-
-@property (nonatomic, assign) BOOL loading;
-
-@property (nonatomic, copy) NSString *htmlSignature;
-@property (nonatomic, copy) NSString *selectedLabel;
-@property (nonatomic, assign) PSTFolderType selected;
-@property (nonatomic, assign) BOOL notificationsEnabled;
 
 @end
 
@@ -235,8 +254,6 @@ PUISSANT_EXPORT NSString *const PSTSpamFolderPathKey;
 - (RACSignal *)twitterMessagesSignal;
 
 @end
-
-//
 
 PUISSANT_EXPORT NSString *const PSTMailAccountNotificationChanged;
 PUISSANT_EXPORT NSString *const PSTMailAccountCountUpdated;

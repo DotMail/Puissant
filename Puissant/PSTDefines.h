@@ -30,6 +30,10 @@
 BLOCK \
 [self didChangeValueForKey:[NSString stringWithUTF8String:(((void)(NO && ((void)keypath, NO)), strchr(# keypath, '.') + 1))]];
 
+#define PSTForwardValueForKey(keypath) [self willChangeValueForKey:keypath]; \
+[self didChangeValueForKey:keypath]; \
+
+
 #define GENERATE_PRAGMA(x) _Pragma(#x)
 #define PUISSANT_TODO(x) GENERATE_PRAGMA(message("[TODO] " #x))
 

@@ -36,12 +36,13 @@ NSString *const PSTSpamFolderPathKey = @"PSTSpamFolderPathKey";
 
 - (void)sync { }
 - (void)refreshSync { }
-- (RACSignal *)sendMessage:(id)message { return nil; }
-- (RACSignal *)saveMessage:(id)message { return nil; }
+- (void)sendMessage:(id)message completion:(void(^)())completion {}
+- (void)saveMessage:(id)message completion:(void(^)())completion {}
 - (NSDictionary *)info { return nil; }
 - (MCOAddress *)addressValueWithName:(BOOL)name { return nil; }
 - (void)setColor:(NSColor *)color forLabel:(NSString *)label { }
 - (NSColor *)colorForLabel:(NSString *)label { return nil; }
+- (NSDictionary *)dictionaryValue { return nil; }
 - (NSDictionary *)folders { return nil; }
 - (BOOL)hasDataForMessage:(MCOIMAPMessage *)message atPath:(NSString *)path { return NO; };
 - (NSData *)dataForMessage:(MCOIMAPMessage *)message atPath:(NSString *)path { return nil; };

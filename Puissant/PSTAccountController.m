@@ -339,8 +339,7 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
 	if (![keyPath isEqualToString:@"currentConversations"]) {
 		if (![keyPath isEqualToString:@"currentSearchResult"]) {
-			[super willChangeValueForKey:keyPath];
-			[super didChangeValueForKey:keyPath];
+			PSTForwardValueForKey(keyPath);
 			return;
 		} else {
 			[self _updateSearchResult];

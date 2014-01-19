@@ -76,7 +76,7 @@
 - (void)synchronize {
 	NSMutableArray *arrayOfAccounts = [NSMutableArray array];
 	for (PSTMailAccount *account in self.accounts) {
-		[arrayOfAccounts addObject:[account info]];
+		[arrayOfAccounts addObject:account.dictionaryValue];
 	}
 	[[NSUserDefaults standardUserDefaults] setObject:arrayOfAccounts forKey:@"Accounts"];
 }

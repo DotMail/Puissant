@@ -76,8 +76,6 @@ static NSArray *PSTDefaultLabelColorsList = nil;
 
 @property (nonatomic, assign) NSUInteger modifiedConversationsLock;
 
-@property (nonatomic, assign) NSTimeInterval lastLabelsRefreshTimestamp;
-
 @end
 
 @implementation PSTIMAPMailAccount {
@@ -182,7 +180,7 @@ static NSArray *PSTDefaultLabelColorsList = nil;
 	}
 	self.savedFolderPaths = [dictionary objectForKey:@"PSTFolders"];
 	if ([dictionary objectForKey:@"PSTFolderColors"]) {
-//		[self setFolderColorsMap:[[NSKeyedUnarchiver unarchiveObjectWithData:[dictionary objectForKey:@"PSTFolderColors"]]mutableCopy]];
+		[self setFolderColorsMap:[[NSKeyedUnarchiver unarchiveObjectWithData:[dictionary objectForKey:@"PSTFolderColors"]]mutableCopy]];
 	}
 	if ([dictionary objectForKey:@"PSTSMTPService"]) {
 		[self setSmtpService:[MCONetService serviceWithInfo:[dictionary objectForKey:@"PSTSMTPService"]]];
@@ -197,6 +195,53 @@ static NSArray *PSTDefaultLabelColorsList = nil;
 
 	return self;
 }
+
+
+//Encode all the things!
+- (NSDictionary *)dictionaryValue {
+	NSMutableDictionary *retVal = [NSMutableDictionary dictionary];
+	if (self.name != nil) {
+		[retVal setObject:self.name forKey:@"PSTName"];
+	}
+	if (self.htmlSignature != nil) {
+		[retVal setObject:self.htmlSignature forKey:@"PSTHTMLSignature"];
+	}
+	[retVal setObject:self.email forKey:@"PSTEmail"];
+	[retVal setObject:[NSNumber numberWithUnsignedInteger:self.inboxRefreshDelay] forKey:@"RefreshDelay"];
+	if (self.MXProvider != nil) {
+		[retVal setObject:self.MXProvider forKey:@"PSTMXProvider"];
+	}
+	if ([self _folderPaths] != nil) {
+		[retVal setObject:[self _folderPaths] forKey:@"PSTFolders"];
+	}
+	if (self.providerIdentifier != nil) {
+		[retVal setObject:self.providerIdentifier forKey:@"PSTProvider"];
+	}
+	[retVal setObject:@"imap" forKey:@"PSTServiceType"];
+	if (self.folderColorsMap) {
+		[retVal setObject:[NSKeyedArchiver archivedDataWithRootObject:self.folderColorsMap] forKey:@"PSTFolderColors"];
+	}
+	if (self.smtpService != nil) {
+		[retVal setObject:self.smtpService.info forKey:@"PSTSMTPService"];
+	}
+	if (self.imapService != nil) {
+		[retVal setObject:self.imapService.info forKey:@"PSTIMAPService"];
+	}
+	if (self.customImapInfo != nil) {
+		[retVal setObject:self.customImapInfo forKey:@"PSTIMAPInfo"];
+	}
+	if (self.customSmtpInfo != nil) {
+		[retVal setObject:self.customSmtpInfo forKey:@"PSTSMTPInfo"];
+	}
+	if (self.xListMapping != nil) {
+		[retVal setObject:self.xListMapping forKey:@"PSTXListMapping"];
+	}
+	if (self.hiddenLabels != nil) {
+		[retVal setObject:[self.hiddenLabels allObjects] forKey:@"PSTHiddenLabels"];
+	}
+	return retVal;
+}
+
 
 - (void)dealloc {
 	if (_imapSynchronizer) {
@@ -273,8 +318,7 @@ static NSArray *PSTDefaultLabelColorsList = nil;
 	if (_accountFlags.waitingUntilAllOperationsHaveFinished) {
 		return;
 	}
-	[super willChangeValueForKey:keyPath];
-	[super didChangeValueForKey:keyPath];
+	PSTForwardValueForKey(keyPath);
 }
 
 #pragma mark - Synchronization
@@ -345,8 +389,7 @@ static NSArray *PSTDefaultLabelColorsList = nil;
 }
 
 - (void)save {
-	[[_imapSynchronizer saveState] subscribeCompleted:^{
-	}];
+	[[_imapSynchronizer saveState] subscribeCompleted:^{ }];
 }
 
 - (void)waitUntilAllOperationsHaveFinished {
@@ -387,51 +430,6 @@ static NSArray *PSTDefaultLabelColorsList = nil;
 	return [MCOAddress addressWithDisplayName:(name ? self.name : nil) mailbox:self.email];
 }
 
-//Encode all the things!
-- (NSDictionary *)info {
-	NSMutableDictionary *retVal = [NSMutableDictionary dictionary];
-	if (self.name != nil) {
-		[retVal setObject:self.name forKey:@"PSTName"];
-	}
-	if (self.htmlSignature != nil) {
-		[retVal setObject:self.htmlSignature forKey:@"PSTHTMLSignature"];
-	}
-	[retVal setObject:self.email forKey:@"PSTEmail"];
-	[retVal setObject:[NSNumber numberWithUnsignedInteger:self.inboxRefreshDelay] forKey:@"RefreshDelay"];
-	if (self.MXProvider != nil) {
-		[retVal setObject:self.MXProvider forKey:@"PSTMXProvider"];
-	}
-	if ([self _folderPaths] != nil) {
-		[retVal setObject:[self _folderPaths] forKey:@"PSTFolders"];
-	}
-	if (self.providerIdentifier != nil) {
-		[retVal setObject:self.providerIdentifier forKey:@"PSTProvider"];
-	}
-	[retVal setObject:@"imap" forKey:@"PSTServiceType"];
-	if (self.folderColorsMap) {
-		[retVal setObject:[NSKeyedArchiver archivedDataWithRootObject:self.folderColorsMap] forKey:@"PSTFolderColors"];
-	}
-	if (self.smtpService != nil) {
-		[retVal setObject:self.smtpService.info forKey:@"PSTSMTPService"];
-	}
-	if (self.imapService != nil) {
-		[retVal setObject:self.imapService.info forKey:@"PSTIMAPService"];
-	}
-	if (self.customImapInfo != nil) {
-		[retVal setObject:self.customImapInfo forKey:@"PSTIMAPInfo"];
-	}
-	if (self.customSmtpInfo != nil) {
-		[retVal setObject:self.customSmtpInfo forKey:@"PSTSMTPInfo"];
-	}
-	if (self.xListMapping != nil) {
-		[retVal setObject:self.xListMapping forKey:@"PSTXListMapping"];
-	}
-	if (self.hiddenLabels != nil) {
-		[retVal setObject:[self.hiddenLabels allObjects] forKey:@"PSTHiddenLabels"];
-	}
-	return retVal;
-}
-
 - (NSArray *)_folderPaths {
 	if (_imapSynchronizer == nil) {
 		if (self.savedFolderPaths == nil) {
@@ -467,22 +465,23 @@ static NSArray *PSTDefaultLabelColorsList = nil;
 	}
 }
 
-- (RACSignal *)sendMessage:(id)message {
-	return [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
-		[self _progressSendMessageAdd];
-		[self.messageToSendQueue addObject:message];
-		if (_accountFlags.processingSendQueue) {
-			[subscriber sendCompleted];
-		} else {
-			[self _sendQueuedMessages];
-			[subscriber sendCompleted];
-		}
-		return nil;
-	}];
+- (void)sendMessage:(id)message completion:(void(^)())completion {
+	NSCParameterAssert(completion != NULL);
+	self.sendMessagesNumberMaximumProgress += 1;
+	[self.messageToSendQueue addObject:message];
+	if (_accountFlags.processingSendQueue) {
+		completion();
+	} else {
+		[self _sendQueuedMessages];
+		completion();
+	}
 }
 
-- (RACSignal *)saveMessage:(id)message {
-	return [self.imapSynchronizer saveMessage:message];
+- (void)saveMessage:(id)message completion:(void(^)())completion {
+	NSCParameterAssert(completion != NULL);
+	[[self.imapSynchronizer saveMessage:message] subscribeCompleted:^{
+		completion();
+	}];
 }
 
 - (NSString *)previewForMessage:(MCOAbstractMessage *)message atPath:(NSString *)path {
@@ -499,11 +498,9 @@ static NSArray *PSTDefaultLabelColorsList = nil;
 - (void)sync {
 	[PSTAccountManager.defaultManager synchronize];
 	[self _setupSync];
-	[[_imapSynchronizer sync]subscribeCompleted:^{
-		[[_imapSynchronizer refreshSync]subscribeCompleted:^{
-			
-		}];
-	}];
+	[[[_imapSynchronizer sync] then:^RACSignal *{
+		return [_imapSynchronizer refreshSync];
+	}] subscribeCompleted:^{}];
 }
 
 #pragma mark - Folder Getters
@@ -805,10 +802,6 @@ static NSArray *PSTDefaultLabelColorsList = nil;
 
 - (void)_afterProcessQueue {
 	[self _refreshSyncAllMail];
-}
-
-- (void)_progressSendMessageAdd {
-	self.sendMessagesNumberMaximumProgress += 1;
 }
 
 - (void)_progressSendMessageDone {

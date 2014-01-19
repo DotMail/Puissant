@@ -139,9 +139,9 @@
 		84C262C71638B2E400A64818 /* Puissant.h in Headers */ = {isa = PBXBuildFile; fileRef = 84C262C61638B2E400A64818 /* Puissant.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84C262D51638B6A500A64818 /* HTTPMultipartUpload.h in Headers */ = {isa = PBXBuildFile; fileRef = 84C262D31638B6A500A64818 /* HTTPMultipartUpload.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84C262D61638B6A500A64818 /* HTTPMultipartUpload.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C262D41638B6A500A64818 /* HTTPMultipartUpload.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		84D57E811887546F0054308C /* NSColor+PSTHexadecimalAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D57E7F1887546F0054308C /* NSColor+PSTHexadecimalAdditions.h */; };
+		84D57E811887546F0054308C /* NSColor+PSTHexadecimalAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D57E7F1887546F0054308C /* NSColor+PSTHexadecimalAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84D57E821887546F0054308C /* NSColor+PSTHexadecimalAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D57E801887546F0054308C /* NSColor+PSTHexadecimalAdditions.m */; };
-		84D57EE61887627A0054308C /* PSTSearchQueryTransformer.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D57EE41887627A0054308C /* PSTSearchQueryTransformer.h */; };
+		84D57EE61887627A0054308C /* PSTSearchQueryTransformer.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D57EE41887627A0054308C /* PSTSearchQueryTransformer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84D57EE71887627A0054308C /* PSTSearchQueryTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D57EE51887627A0054308C /* PSTSearchQueryTransformer.m */; };
 		84D6CB5D18344D5900DD3C1B /* NSString+PSTSearch.h in Headers */ = {isa = PBXBuildFile; fileRef = 84D6CB5B18344D5900DD3C1B /* NSString+PSTSearch.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84D6CB5E18344D5900DD3C1B /* NSString+PSTSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D6CB5C18344D5900DD3C1B /* NSString+PSTSearch.m */; };
@@ -1935,8 +1935,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				84C2625F1638AED900A64818 /* PSTConstants.h in Headers */,
 				84D57E811887546F0054308C /* NSColor+PSTHexadecimalAdditions.h in Headers */,
+				84D57EE61887627A0054308C /* PSTSearchQueryTransformer.h in Headers */,
+				84C2625F1638AED900A64818 /* PSTConstants.h in Headers */,
 				84EECFC6176EB46700AA826F /* MCOAbstractPart+LEPRecursiveAttachments.h in Headers */,
 				84EECFD0176EB61D00AA826F /* MCOMessageHeader+PSTExtensions.h in Headers */,
 				84E5621A1726DEA300387F51 /* FXKeychain.h in Headers */,
@@ -1988,7 +1989,6 @@
 				C9EE65C41874B80500949AE2 /* PSTAddressBookManager.h in Headers */,
 				C9EE65CE1874B80500949AE2 /* PSTAvatarImageManager.h in Headers */,
 				C9EE661E1874B80500949AE2 /* PSTModifiedMessagesOperation.h in Headers */,
-				84D57EE61887627A0054308C /* PSTSearchQueryTransformer.h in Headers */,
 				C9EE65D41874B80500949AE2 /* PSTCachedMessage.h in Headers */,
 				C9EE66361874B80500949AE2 /* PSTSearchOperation.h in Headers */,
 				C9EE65F71874B80500949AE2 /* PSTIncompleteMessagesUIDOperation.h in Headers */,

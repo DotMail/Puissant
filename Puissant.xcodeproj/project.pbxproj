@@ -46,7 +46,6 @@
 		8481D1F1165FFC58004FA6B5 /* NSString+PSTURL.h in Headers */ = {isa = PBXBuildFile; fileRef = 8481D1EF165FFC58004FA6B5 /* NSString+PSTURL.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8481D1F2165FFC58004FA6B5 /* NSString+PSTURL.m in Sources */ = {isa = PBXBuildFile; fileRef = 8481D1F0165FFC58004FA6B5 /* NSString+PSTURL.m */; };
 		84986DB91743085A001D7E88 /* PSTAddressBookManagerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 84986DB81743085A001D7E88 /* PSTAddressBookManagerSpec.m */; };
-		84986DCE174315ED001D7E88 /* libGRMustache6-MacOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84986DC3174315BF001D7E88 /* libGRMustache6-MacOS.a */; };
 		8499C6E917967325008849BF /* MailCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8442BCAC176E26F100F27E4D /* MailCore.framework */; };
 		8499C6FC17972984008849BF /* PSTMailAccountSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8499C6FB17972984008849BF /* PSTMailAccountSpec.m */; };
 		849C49FF166298DC006C7EBE /* NSData+PSTGZip.h in Headers */ = {isa = PBXBuildFile; fileRef = 849C49FD166298DB006C7EBE /* NSData+PSTGZip.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -425,61 +424,12 @@
 			remoteGlobalIDString = C6BD288C170BD71100A91AC1;
 			remoteInfo = "mailcore osx";
 		};
-		84986DC2174315BF001D7E88 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84986DBA174315BF001D7E88 /* GRMustache.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 56DEC248152631040031E8DC;
-			remoteInfo = "GRMustache6-MacOS";
-		};
-		84986DC4174315BF001D7E88 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84986DBA174315BF001D7E88 /* GRMustache.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 56DEC255152631040031E8DC;
-			remoteInfo = "GRMustache6-MacOSTests";
-		};
-		84986DC6174315BF001D7E88 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84986DBA174315BF001D7E88 /* GRMustache.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = ABAF86A516A0A65A001ADE96;
-			remoteInfo = "GRMustache6-MacOSTests-GC";
-		};
-		84986DC8174315BF001D7E88 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84986DBA174315BF001D7E88 /* GRMustache.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 56DEC26E1526311B0031E8DC;
-			remoteInfo = "GRMustache6-iOS";
-		};
-		84986DCA174315BF001D7E88 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84986DBA174315BF001D7E88 /* GRMustache.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 56DEC27B1526311C0031E8DC;
-			remoteInfo = "GRMustache6-iOSTests";
-		};
 		84B65068183C72AA008A12E2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 840477F01739EEC7009E8A81 /* Expecta.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 9C4416F917FF3F4A00978F09;
 			remoteInfo = "ExpectaTests-XCTest";
-		};
-		84B6506F183C72AA008A12E2 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84986DBA174315BF001D7E88 /* GRMustache.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 56A731121805258300B8570A;
-			remoteInfo = "GRMustache6-iOS-arm64";
-		};
-		84B65071183C72AA008A12E2 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84986DBA174315BF001D7E88 /* GRMustache.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 56A731681805276A00B8570A;
-			remoteInfo = "GRMustache6-iOS-arm64-Tests";
 		};
 		84B6507B183C72AA008A12E2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -501,13 +451,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = E9901C3B18205AB100844A05;
 			remoteInfo = "Specta-OSXTests";
-		};
-		84B74E761754745C00158CA4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84986DBA174315BF001D7E88 /* GRMustache.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 56DEC26D1526311B0031E8DC;
-			remoteInfo = "GRMustache6-iOS";
 		};
 		84B74E7A1754745C00158CA4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -659,7 +602,6 @@
 		848E59011638C07800B9DD72 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/AddressBook.framework; sourceTree = DEVELOPER_DIR; };
 		848E59031638C0A800B9DD72 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
 		84986DB81743085A001D7E88 /* PSTAddressBookManagerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTAddressBookManagerSpec.m; sourceTree = "<group>"; };
-		84986DBA174315BF001D7E88 /* GRMustache.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GRMustache.xcodeproj; path = External/GRMustache/src/GRMustache.xcodeproj; sourceTree = SOURCE_ROOT; };
 		8499C6FB17972984008849BF /* PSTMailAccountSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTMailAccountSpec.m; sourceTree = "<group>"; };
 		849C49FD166298DB006C7EBE /* NSData+PSTGZip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "NSData+PSTGZip.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		849C49FE166298DB006C7EBE /* NSData+PSTGZip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "NSData+PSTGZip.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -1044,7 +986,6 @@
 				C9AD86261874B4450046DB9A /* ReactiveCocoa.framework in Frameworks */,
 				C9EE650D1874B4AA00949AE2 /* Security.framework in Frameworks */,
 				C9EE650B1874B4A400949AE2 /* SystemConfiguration.framework in Frameworks */,
-				84986DCE174315ED001D7E88 /* libGRMustache6-MacOS.a in Frameworks */,
 				84C08A3B16FA7BF8005ABB3E /* liblevelDB.a in Frameworks */,
 				C9EE65031874B47600949AE2 /* libTokyoCabinet.a in Frameworks */,
 				C9EE65071874B49100949AE2 /* libsqlite3.dylib in Frameworks */,
@@ -1224,20 +1165,6 @@
 				843F415916E2D1BF00DEE8AB /* StandardPaths.m */,
 			);
 			name = "Helper Categories";
-			sourceTree = "<group>";
-		};
-		84986DBB174315BF001D7E88 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				84986DC3174315BF001D7E88 /* libGRMustache6-MacOS.a */,
-				84986DC5174315BF001D7E88 /* GRMustache6-MacOSTests.octest */,
-				84986DC7174315BF001D7E88 /* GRMustache6-MacOSTests-GC.octest */,
-				84986DC9174315BF001D7E88 /* libGRMustache6-iOS.a */,
-				84986DCB174315BF001D7E88 /* GRMustache6-iOSTests.octest */,
-				84B65070183C72AA008A12E2 /* libGRMustache6-iOS-arm64.a */,
-				84B65072183C72AA008A12E2 /* GRMustache6-iOS-arm64-Tests.octest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		84C0890E16FA7A6B005ABB3E /* levelDB */ = {
@@ -1584,7 +1511,6 @@
 			children = (
 				848CDBDC1644A3B600D72084 /* FMDB */,
 				84C262BF1638AFBB00A64818 /* FXKeychain */,
-				C9AD85ED1874B1780046DB9A /* GRMustache */,
 				84C0890E16FA7A6B005ABB3E /* levelDB */,
 				C9AD85EE1874B1800046DB9A /* Mailcore2 */,
 				8442141F1659AB9F00A58F6B /* NPReachability */,
@@ -1593,14 +1519,6 @@
 			);
 			name = External;
 			path = Puissant;
-			sourceTree = "<group>";
-		};
-		C9AD85ED1874B1780046DB9A /* GRMustache */ = {
-			isa = PBXGroup;
-			children = (
-				84986DBA174315BF001D7E88 /* GRMustache.xcodeproj */,
-			);
-			name = GRMustache;
 			sourceTree = "<group>";
 		};
 		C9AD85EE1874B1800046DB9A /* Mailcore2 */ = {
@@ -2080,7 +1998,6 @@
 			);
 			dependencies = (
 				84B74E7D1754746400158CA4 /* PBXTargetDependency */,
-				84B74E771754745C00158CA4 /* PBXTargetDependency */,
 				84B74E7B1754745C00158CA4 /* PBXTargetDependency */,
 			);
 			name = "Puissant-iOS";
@@ -2150,10 +2067,6 @@
 				{
 					ProductGroup = 840477F11739EEC7009E8A81 /* Products */;
 					ProjectRef = 840477F01739EEC7009E8A81 /* Expecta.xcodeproj */;
-				},
-				{
-					ProductGroup = 84986DBB174315BF001D7E88 /* Products */;
-					ProjectRef = 84986DBA174315BF001D7E88 /* GRMustache.xcodeproj */;
 				},
 				{
 					ProductGroup = 8442BC9C176E26F000F27E4D /* Products */;
@@ -2260,60 +2173,11 @@
 			remoteRef = 8442BCAB176E26F100F27E4D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		84986DC3174315BF001D7E88 /* libGRMustache6-MacOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libGRMustache6-MacOS.a";
-			remoteRef = 84986DC2174315BF001D7E88 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		84986DC5174315BF001D7E88 /* GRMustache6-MacOSTests.octest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "GRMustache6-MacOSTests.octest";
-			remoteRef = 84986DC4174315BF001D7E88 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		84986DC7174315BF001D7E88 /* GRMustache6-MacOSTests-GC.octest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "GRMustache6-MacOSTests-GC.octest";
-			remoteRef = 84986DC6174315BF001D7E88 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		84986DC9174315BF001D7E88 /* libGRMustache6-iOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libGRMustache6-iOS.a";
-			remoteRef = 84986DC8174315BF001D7E88 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		84986DCB174315BF001D7E88 /* GRMustache6-iOSTests.octest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "GRMustache6-iOSTests.octest";
-			remoteRef = 84986DCA174315BF001D7E88 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		84B65069183C72AA008A12E2 /* ExpectaTests-XCTest.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "ExpectaTests-XCTest.xctest";
 			remoteRef = 84B65068183C72AA008A12E2 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		84B65070183C72AA008A12E2 /* libGRMustache6-iOS-arm64.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libGRMustache6-iOS-arm64.a";
-			remoteRef = 84B6506F183C72AA008A12E2 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		84B65072183C72AA008A12E2 /* GRMustache6-iOS-arm64-Tests.octest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "GRMustache6-iOS-arm64-Tests.octest";
-			remoteRef = 84B65071183C72AA008A12E2 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		84B6507C183C72AA008A12E2 /* libSpecta-OSX.a */ = {
@@ -2652,11 +2516,6 @@
 			name = "mailcore osx";
 			targetProxy = 8442BCAD176E270500F27E4D /* PBXContainerItemProxy */;
 		};
-		84B74E771754745C00158CA4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "GRMustache6-iOS";
-			targetProxy = 84B74E761754745C00158CA4 /* PBXContainerItemProxy */;
-		};
 		84B74E7B1754745C00158CA4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = TokyoCabinet;
@@ -2896,7 +2755,6 @@
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/Puissant\"",
-					"\"$(SRCROOT)/External/GRMustache/include\"",
 					"$(SRCROOT)/leveldb/include/",
 					"$(SRCROOT)/leveldb/",
 					"\"${SDKROOT}/usr/include/libxml2\"",
@@ -2906,7 +2764,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/External/GRMustache/lib\"",
 					"\"$(SRCROOT)/Puissant/leveldb/1.9.0/lib\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
@@ -2944,7 +2801,6 @@
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/Puissant\"",
-					"\"$(SRCROOT)/External/GRMustache/include\"",
 					"$(SRCROOT)/leveldb/include/",
 					"$(SRCROOT)/leveldb/",
 					"\"${SDKROOT}/usr/include/libxml2\"",
@@ -2954,7 +2810,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/External/GRMustache/lib\"",
 					"\"$(SRCROOT)/Puissant/leveldb/1.9.0/lib\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;

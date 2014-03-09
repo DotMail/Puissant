@@ -45,8 +45,8 @@ NSString *const PSTMoustacheConversationActionStepColorKey = @"NEXT_STEP_COLOR";
 }
 
 - (NSString *)render {
-
-	return [rendering stringByDecodingHTMLEntities];
+	return @"";
+//	return [rendering stringByDecodingHTMLEntities];
 }
 
 @end

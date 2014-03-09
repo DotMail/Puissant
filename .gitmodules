@@ -13,6 +13,3 @@
 [submodule "External/Specta"]
 	path = External/Specta
 	url = https://github.com/specta/specta.git
-[submodule "External/GRMustache"]
-	path = External/GRMustache
-	url = https://github.com/groue/GRMustache.git

@@ -7,7 +7,6 @@
 //
 
 #import "PSTMustacheTemplate.h"
-#import "GRMustache.h"
 #import "NSString+HTML.h"
 #import "PSTDatabaseController.h"
 #import "PSTCachedMessage.h"
@@ -38,7 +37,6 @@ NSString *const PSTMoustacheConversationActionStepColorKey = @"NEXT_STEP_COLOR";
 - (id)initWithFilename:(NSString *)filename inFolder:(NSString *)folder values:(NSDictionary *)values {
 	self = [super init];
 	
-	[GRMustacheConfiguration defaultConfiguration].contentType = GRMustacheContentTypeHTML;
 	_valuesDictionary = [NSMutableDictionary dictionaryWithDictionary:values];
 	_filename = filename;
 	_folder = folder;
@@ -47,10 +45,7 @@ NSString *const PSTMoustacheConversationActionStepColorKey = @"NEXT_STEP_COLOR";
 }
 
 - (NSString *)render {
-	NSString *rendering = [GRMustacheTemplate renderObject:self.valuesDictionary
-											  fromResource:self.filename
-													bundle:nil
-													 error:NULL];
+
 	return [rendering stringByDecodingHTMLEntities];
 }
 

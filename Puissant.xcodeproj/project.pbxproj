@@ -460,13 +460,6 @@
 			remoteGlobalIDString = 56DEC27B1526311C0031E8DC;
 			remoteInfo = "GRMustache6-iOSTests";
 		};
-		84986DCC174315E5001D7E88 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84986DBA174315BF001D7E88 /* GRMustache.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 56DEC247152631040031E8DC;
-			remoteInfo = "GRMustache6-MacOS";
-		};
 		84B65068183C72AA008A12E2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 840477F01739EEC7009E8A81 /* Expecta.xcodeproj */;
@@ -2125,7 +2118,6 @@
 			);
 			dependencies = (
 				8442BCAE176E270500F27E4D /* PBXTargetDependency */,
-				84986DCD174315E5001D7E88 /* PBXTargetDependency */,
 				84016B9516FE83C3004A012A /* PBXTargetDependency */,
 				84C08A3A16FA7BDF005ABB3E /* PBXTargetDependency */,
 			);
@@ -2659,11 +2651,6 @@
 			isa = PBXTargetDependency;
 			name = "mailcore osx";
 			targetProxy = 8442BCAD176E270500F27E4D /* PBXContainerItemProxy */;
-		};
-		84986DCD174315E5001D7E88 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "GRMustache6-MacOS";
-			targetProxy = 84986DCC174315E5001D7E88 /* PBXContainerItemProxy */;
 		};
 		84B74E771754745C00158CA4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

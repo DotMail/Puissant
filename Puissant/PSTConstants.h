@@ -9,7 +9,7 @@
 #ifndef Mail_PSTConstants_h
 #define Mail_PSTConstants_h
 
-#include "PSTDefines.h"
+#import <Puissant/PSTDefines.h>
 
 @class MCOAbstractPart;
 

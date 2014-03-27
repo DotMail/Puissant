@@ -156,7 +156,7 @@
 		C9AD86261874B4450046DB9A /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9AD85FC1874B1880046DB9A /* ReactiveCocoa.framework */; };
 		C9BDF7181874CD45002B70B5 /* libSpecta-OSX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84B6507C183C72AA008A12E2 /* libSpecta-OSX.a */; };
 		C9BDF7191874CD51002B70B5 /* libExpecta.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 840477F81739EEC7009E8A81 /* libExpecta.a */; };
-		C9C2EB2818E3E5F3008DA8A9 /* PSTDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = C90C831F1874B00600E77CDE /* PSTDefines.h */; };
+		C9C2EB2818E3E5F3008DA8A9 /* PSTDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = C90C831F1874B00600E77CDE /* PSTDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C9C2EB4618E3E643008DA8A9 /* FMDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C2EB3B18E3E643008DA8A9 /* FMDatabase.h */; };
 		C9C2EB4718E3E644008DA8A9 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C2EB3C18E3E643008DA8A9 /* FMDatabase.m */; };
 		C9C2EB4818E3E644008DA8A9 /* FMDatabaseAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C2EB3D18E3E643008DA8A9 /* FMDatabaseAdditions.h */; };

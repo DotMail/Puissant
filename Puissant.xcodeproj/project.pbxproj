@@ -20,16 +20,6 @@
 		84339B141751631D00FCC06C /* PSTConstantsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 84339B131751631D00FCC06C /* PSTConstantsSpec.m */; };
 		84339B211751672A00FCC06C /* NSIndexSet+PSTOperators.h in Headers */ = {isa = PBXBuildFile; fileRef = 84339B1F1751672A00FCC06C /* NSIndexSet+PSTOperators.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84339B221751672A00FCC06C /* NSIndexSet+PSTOperators.m in Sources */ = {isa = PBXBuildFile; fileRef = 84339B201751672A00FCC06C /* NSIndexSet+PSTOperators.m */; };
-		84339B2E175178E100FCC06C /* FMDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 84339B23175178E100FCC06C /* FMDatabase.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84339B2F175178E100FCC06C /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 84339B24175178E100FCC06C /* FMDatabase.m */; };
-		84339B30175178E100FCC06C /* FMDatabaseAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 84339B25175178E100FCC06C /* FMDatabaseAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84339B31175178E100FCC06C /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84339B26175178E100FCC06C /* FMDatabaseAdditions.m */; };
-		84339B32175178E100FCC06C /* FMDatabasePool.h in Headers */ = {isa = PBXBuildFile; fileRef = 84339B27175178E100FCC06C /* FMDatabasePool.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84339B33175178E100FCC06C /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 84339B28175178E100FCC06C /* FMDatabasePool.m */; };
-		84339B34175178E100FCC06C /* FMDatabaseQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 84339B29175178E100FCC06C /* FMDatabaseQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84339B35175178E100FCC06C /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 84339B2A175178E100FCC06C /* FMDatabaseQueue.m */; };
-		84339B37175178E100FCC06C /* FMResultSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 84339B2C175178E100FCC06C /* FMResultSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84339B38175178E100FCC06C /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 84339B2D175178E100FCC06C /* FMResultSet.m */; };
 		84388F02170E4755004080CA /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 84388F01170E4754004080CA /* libxml2.dylib */; };
 		843F415A16E2D1BF00DEE8AB /* StandardPaths.h in Headers */ = {isa = PBXBuildFile; fileRef = 843F415816E2D1BF00DEE8AB /* StandardPaths.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		843F415B16E2D1BF00DEE8AB /* StandardPaths.m in Sources */ = {isa = PBXBuildFile; fileRef = 843F415916E2D1BF00DEE8AB /* StandardPaths.m */; };
@@ -57,11 +47,6 @@
 		84B74E6B1754744100158CA4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84B74E6A1754744100158CA4 /* Foundation.framework */; };
 		84B74E831754748500158CA4 /* NPReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C262641638AF1A00A64818 /* NPReachability.m */; };
 		84B74E841754748500158CA4 /* FXKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E562191726DEA300387F51 /* FXKeychain.m */; };
-		84B74E851754748500158CA4 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 84339B24175178E100FCC06C /* FMDatabase.m */; };
-		84B74E861754748500158CA4 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84339B26175178E100FCC06C /* FMDatabaseAdditions.m */; };
-		84B74E871754748500158CA4 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 84339B28175178E100FCC06C /* FMDatabasePool.m */; };
-		84B74E881754748500158CA4 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 84339B2A175178E100FCC06C /* FMDatabaseQueue.m */; };
-		84B74E891754748500158CA4 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 84339B2D175178E100FCC06C /* FMResultSet.m */; };
 		84B74E901754748500158CA4 /* MCOAddress+PSTPrettification.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E1862116BE409200717FAA /* MCOAddress+PSTPrettification.m */; };
 		84B74ED01754748500158CA4 /* ABGroup+CFIAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C262661638AF1A00A64818 /* ABGroup+CFIAdditions.m */; };
 		84B74ED11754748500158CA4 /* ABPerson+CFIAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C262681638AF1A00A64818 /* ABPerson+CFIAdditions.m */; };
@@ -168,10 +153,21 @@
 		84EECFDA176EC6E800AA826F /* MCOIMAPMessage+PSTExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 84EECFD8176EC6E800AA826F /* MCOIMAPMessage+PSTExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84EECFDB176EC6E800AA826F /* MCOIMAPMessage+PSTExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84EECFD9176EC6E800AA826F /* MCOIMAPMessage+PSTExtensions.m */; };
 		84EECFDC176EC6E800AA826F /* MCOIMAPMessage+PSTExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84EECFD9176EC6E800AA826F /* MCOIMAPMessage+PSTExtensions.m */; };
-		C90C83201874B00600E77CDE /* PSTDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = C90C831F1874B00600E77CDE /* PSTDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C9AD86261874B4450046DB9A /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9AD85FC1874B1880046DB9A /* ReactiveCocoa.framework */; };
 		C9BDF7181874CD45002B70B5 /* libSpecta-OSX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84B6507C183C72AA008A12E2 /* libSpecta-OSX.a */; };
 		C9BDF7191874CD51002B70B5 /* libExpecta.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 840477F81739EEC7009E8A81 /* libExpecta.a */; };
+		C9C2EB2818E3E5F3008DA8A9 /* PSTDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = C90C831F1874B00600E77CDE /* PSTDefines.h */; };
+		C9C2EB4618E3E643008DA8A9 /* FMDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C2EB3B18E3E643008DA8A9 /* FMDatabase.h */; };
+		C9C2EB4718E3E644008DA8A9 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C2EB3C18E3E643008DA8A9 /* FMDatabase.m */; };
+		C9C2EB4818E3E644008DA8A9 /* FMDatabaseAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C2EB3D18E3E643008DA8A9 /* FMDatabaseAdditions.h */; };
+		C9C2EB4918E3E644008DA8A9 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C2EB3E18E3E643008DA8A9 /* FMDatabaseAdditions.m */; };
+		C9C2EB4A18E3E644008DA8A9 /* FMDatabasePool.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C2EB3F18E3E643008DA8A9 /* FMDatabasePool.h */; };
+		C9C2EB4B18E3E644008DA8A9 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C2EB4018E3E643008DA8A9 /* FMDatabasePool.m */; };
+		C9C2EB4C18E3E644008DA8A9 /* FMDatabaseQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C2EB4118E3E643008DA8A9 /* FMDatabaseQueue.h */; };
+		C9C2EB4D18E3E644008DA8A9 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C2EB4218E3E643008DA8A9 /* FMDatabaseQueue.m */; };
+		C9C2EB4E18E3E644008DA8A9 /* FMDB.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C2EB4318E3E643008DA8A9 /* FMDB.h */; };
+		C9C2EB4F18E3E644008DA8A9 /* FMResultSet.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C2EB4418E3E643008DA8A9 /* FMResultSet.h */; };
+		C9C2EB5018E3E644008DA8A9 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C2EB4518E3E643008DA8A9 /* FMResultSet.m */; };
 		C9EE65031874B47600949AE2 /* libTokyoCabinet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84016B9316FE83B3004A012A /* libTokyoCabinet.a */; };
 		C9EE65051874B48800949AE2 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C9EE65041874B48800949AE2 /* libz.dylib */; };
 		C9EE65071874B49100949AE2 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C9EE65061874B49100949AE2 /* libsqlite3.dylib */; };
@@ -570,16 +566,6 @@
 		84339B131751631D00FCC06C /* PSTConstantsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTConstantsSpec.m; sourceTree = "<group>"; };
 		84339B1F1751672A00FCC06C /* NSIndexSet+PSTOperators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSIndexSet+PSTOperators.h"; sourceTree = "<group>"; };
 		84339B201751672A00FCC06C /* NSIndexSet+PSTOperators.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSIndexSet+PSTOperators.m"; sourceTree = "<group>"; };
-		84339B23175178E100FCC06C /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabase.h; path = External/FMDB/src/FMDatabase.h; sourceTree = SOURCE_ROOT; };
-		84339B24175178E100FCC06C /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabase.m; path = External/FMDB/src/FMDatabase.m; sourceTree = SOURCE_ROOT; };
-		84339B25175178E100FCC06C /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabaseAdditions.h; path = External/FMDB/src/FMDatabaseAdditions.h; sourceTree = SOURCE_ROOT; };
-		84339B26175178E100FCC06C /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabaseAdditions.m; path = External/FMDB/src/FMDatabaseAdditions.m; sourceTree = SOURCE_ROOT; };
-		84339B27175178E100FCC06C /* FMDatabasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabasePool.h; path = External/FMDB/src/FMDatabasePool.h; sourceTree = SOURCE_ROOT; };
-		84339B28175178E100FCC06C /* FMDatabasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabasePool.m; path = External/FMDB/src/FMDatabasePool.m; sourceTree = SOURCE_ROOT; };
-		84339B29175178E100FCC06C /* FMDatabaseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabaseQueue.h; path = External/FMDB/src/FMDatabaseQueue.h; sourceTree = SOURCE_ROOT; };
-		84339B2A175178E100FCC06C /* FMDatabaseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabaseQueue.m; path = External/FMDB/src/FMDatabaseQueue.m; sourceTree = SOURCE_ROOT; };
-		84339B2C175178E100FCC06C /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMResultSet.h; path = External/FMDB/src/FMResultSet.h; sourceTree = SOURCE_ROOT; };
-		84339B2D175178E100FCC06C /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMResultSet.m; path = External/FMDB/src/FMResultSet.m; sourceTree = SOURCE_ROOT; };
 		84388F01170E4754004080CA /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		843F415816E2D1BF00DEE8AB /* StandardPaths.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StandardPaths.h; sourceTree = "<group>"; };
 		843F415916E2D1BF00DEE8AB /* StandardPaths.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StandardPaths.m; sourceTree = "<group>"; };
@@ -794,6 +780,17 @@
 		84EECFD9176EC6E800AA826F /* MCOIMAPMessage+PSTExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MCOIMAPMessage+PSTExtensions.m"; sourceTree = "<group>"; };
 		C90C831F1874B00600E77CDE /* PSTDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTDefines.h; sourceTree = "<group>"; };
 		C90C83321874B03E00E77CDE /* ReactiveCocoa.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactiveCocoa.xcodeproj; path = ../External/ReactiveCocoa/ReactiveCocoaFramework/ReactiveCocoa.xcodeproj; sourceTree = "<group>"; };
+		C9C2EB3B18E3E643008DA8A9 /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabase.h; path = External/FMDB/src/fmdb/FMDatabase.h; sourceTree = SOURCE_ROOT; };
+		C9C2EB3C18E3E643008DA8A9 /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabase.m; path = External/FMDB/src/fmdb/FMDatabase.m; sourceTree = SOURCE_ROOT; };
+		C9C2EB3D18E3E643008DA8A9 /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabaseAdditions.h; path = External/FMDB/src/fmdb/FMDatabaseAdditions.h; sourceTree = SOURCE_ROOT; };
+		C9C2EB3E18E3E643008DA8A9 /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabaseAdditions.m; path = External/FMDB/src/fmdb/FMDatabaseAdditions.m; sourceTree = SOURCE_ROOT; };
+		C9C2EB3F18E3E643008DA8A9 /* FMDatabasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabasePool.h; path = External/FMDB/src/fmdb/FMDatabasePool.h; sourceTree = SOURCE_ROOT; };
+		C9C2EB4018E3E643008DA8A9 /* FMDatabasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabasePool.m; path = External/FMDB/src/fmdb/FMDatabasePool.m; sourceTree = SOURCE_ROOT; };
+		C9C2EB4118E3E643008DA8A9 /* FMDatabaseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabaseQueue.h; path = External/FMDB/src/fmdb/FMDatabaseQueue.h; sourceTree = SOURCE_ROOT; };
+		C9C2EB4218E3E643008DA8A9 /* FMDatabaseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabaseQueue.m; path = External/FMDB/src/fmdb/FMDatabaseQueue.m; sourceTree = SOURCE_ROOT; };
+		C9C2EB4318E3E643008DA8A9 /* FMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDB.h; path = External/FMDB/src/fmdb/FMDB.h; sourceTree = SOURCE_ROOT; };
+		C9C2EB4418E3E643008DA8A9 /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMResultSet.h; path = External/FMDB/src/fmdb/FMResultSet.h; sourceTree = SOURCE_ROOT; };
+		C9C2EB4518E3E643008DA8A9 /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMResultSet.m; path = External/FMDB/src/fmdb/FMResultSet.m; sourceTree = SOURCE_ROOT; };
 		C9EE65041874B48800949AE2 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		C9EE65061874B49100949AE2 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		C9EE65081874B49A00949AE2 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
@@ -1101,16 +1098,17 @@
 		848CDBDC1644A3B600D72084 /* FMDB */ = {
 			isa = PBXGroup;
 			children = (
-				84339B23175178E100FCC06C /* FMDatabase.h */,
-				84339B24175178E100FCC06C /* FMDatabase.m */,
-				84339B25175178E100FCC06C /* FMDatabaseAdditions.h */,
-				84339B26175178E100FCC06C /* FMDatabaseAdditions.m */,
-				84339B27175178E100FCC06C /* FMDatabasePool.h */,
-				84339B28175178E100FCC06C /* FMDatabasePool.m */,
-				84339B29175178E100FCC06C /* FMDatabaseQueue.h */,
-				84339B2A175178E100FCC06C /* FMDatabaseQueue.m */,
-				84339B2C175178E100FCC06C /* FMResultSet.h */,
-				84339B2D175178E100FCC06C /* FMResultSet.m */,
+				C9C2EB3B18E3E643008DA8A9 /* FMDatabase.h */,
+				C9C2EB3C18E3E643008DA8A9 /* FMDatabase.m */,
+				C9C2EB3D18E3E643008DA8A9 /* FMDatabaseAdditions.h */,
+				C9C2EB3E18E3E643008DA8A9 /* FMDatabaseAdditions.m */,
+				C9C2EB3F18E3E643008DA8A9 /* FMDatabasePool.h */,
+				C9C2EB4018E3E643008DA8A9 /* FMDatabasePool.m */,
+				C9C2EB4118E3E643008DA8A9 /* FMDatabaseQueue.h */,
+				C9C2EB4218E3E643008DA8A9 /* FMDatabaseQueue.m */,
+				C9C2EB4318E3E643008DA8A9 /* FMDB.h */,
+				C9C2EB4418E3E643008DA8A9 /* FMResultSet.h */,
+				C9C2EB4518E3E643008DA8A9 /* FMResultSet.m */,
 			);
 			name = FMDB;
 			sourceTree = "<group>";
@@ -1851,6 +1849,7 @@
 				84C2625F1638AED900A64818 /* PSTConstants.h in Headers */,
 				84EECFC6176EB46700AA826F /* MCOAbstractPart+LEPRecursiveAttachments.h in Headers */,
 				84EECFD0176EB61D00AA826F /* MCOMessageHeader+PSTExtensions.h in Headers */,
+				C9C2EB4E18E3E644008DA8A9 /* FMDB.h in Headers */,
 				84E5621A1726DEA300387F51 /* FXKeychain.h in Headers */,
 				843F415A16E2D1BF00DEE8AB /* StandardPaths.h in Headers */,
 				C9EE65D01874B80500949AE2 /* PSTImageMapTable.h in Headers */,
@@ -1878,6 +1877,7 @@
 				C9EE66381874B80500949AE2 /* PSTSearchParser.h in Headers */,
 				C9EE65CC1874B80500949AE2 /* PSTAvatarFetchOperation.h in Headers */,
 				C9EE66401874B80500949AE2 /* PSTStorageOperation.h in Headers */,
+				C9C2EB4A18E3E644008DA8A9 /* FMDatabasePool.h in Headers */,
 				C9EE664C1874B80500949AE2 /* PSTUserDefaults.h in Headers */,
 				C9EE66091874B80500949AE2 /* PSTLoadCachedFlagsOperation.h in Headers */,
 				C9EE65C01874B80500949AE2 /* PSTAddMessagesOperation.h in Headers */,
@@ -1910,6 +1910,7 @@
 				C9EE65C61874B80500949AE2 /* PSTArchiver.h in Headers */,
 				C9EE66301874B80500949AE2 /* PSTRemoveNonExistingMessagesOperation.h in Headers */,
 				C9EE661C1874B80500949AE2 /* PSTMimeManager.h in Headers */,
+				C9C2EB4C18E3E644008DA8A9 /* FMDatabaseQueue.h in Headers */,
 				C9EE65B61874B80500949AE2 /* PSTAccountManager.h in Headers */,
 				C9EE65B01874B80500949AE2 /* PSTAccountChecker.h in Headers */,
 				C9EE662A1874B80500949AE2 /* PSTRemoveLocalMessagesOperation.h in Headers */,
@@ -1920,6 +1921,7 @@
 				841A64FB166C3AA90040B0EE /* NSString+PSTFilenames.h in Headers */,
 				C9EE66421874B80500949AE2 /* PSTUIDsNotInDatabaseOperation.h in Headers */,
 				84624CFA1673B14A007A8992 /* NSData+PSTCompression.h in Headers */,
+				C9C2EB4618E3E643008DA8A9 /* FMDatabase.h in Headers */,
 				84D6CB5D18344D5900DD3C1B /* NSString+PSTSearch.h in Headers */,
 				C9EE65CA1874B80500949AE2 /* PSTAttachmentFetchOperation.h in Headers */,
 				84EECFD5176EC03E00AA826F /* MCOIMAPSession+PSTExtensions.h in Headers */,
@@ -1934,19 +1936,16 @@
 				C9EE66111874B80500949AE2 /* PSTLocalMessage.h in Headers */,
 				84339B211751672A00FCC06C /* NSIndexSet+PSTOperators.h in Headers */,
 				C9EE65D81874B80500949AE2 /* PSTCommitFlagsOperation.h in Headers */,
-				84339B2E175178E100FCC06C /* FMDatabase.h in Headers */,
-				84339B30175178E100FCC06C /* FMDatabaseAdditions.h in Headers */,
 				C9EE66281874B80500949AE2 /* PSTRegularExpression.h in Headers */,
-				84339B32175178E100FCC06C /* FMDatabasePool.h in Headers */,
-				84339B34175178E100FCC06C /* FMDatabaseQueue.h in Headers */,
-				C90C83201874B00600E77CDE /* PSTDefines.h in Headers */,
+				C9C2EB2818E3E5F3008DA8A9 /* PSTDefines.h in Headers */,
 				C9EE65C81874B80500949AE2 /* PSTAttachmentCache.h in Headers */,
-				84339B37175178E100FCC06C /* FMResultSet.h in Headers */,
 				C9EE66221874B80500949AE2 /* PSTNotificationHub.h in Headers */,
 				84E1862216BE409200717FAA /* MCOAddress+PSTPrettification.h in Headers */,
 				84B0611416BD9DBC002F79A1 /* NSString+WhitespaceStripping.h in Headers */,
 				8421B38C16B494A6006825D8 /* NSApplication+PSTSystemAdditions.h in Headers */,
+				C9C2EB4818E3E644008DA8A9 /* FMDatabaseAdditions.h in Headers */,
 				8421B37616B48420006825D8 /* NSArray+StringifyAddress.h in Headers */,
+				C9C2EB4F18E3E644008DA8A9 /* FMResultSet.h in Headers */,
 				84E53E891694128E0029C2EE /* ABRecord+CFIAdditions.h in Headers */,
 				84C262C71638B2E400A64818 /* Puissant.h in Headers */,
 				84C2628F1638AF2800A64818 /* NSString+PSTUUID.h in Headers */,
@@ -1958,7 +1957,6 @@
 				84C262B51638AF2800A64818 /* NSDate+Helper.h in Headers */,
 				84C262B71638AF2800A64818 /* NSString+HTML.h in Headers */,
 				84C262D51638B6A500A64818 /* HTTPMultipartUpload.h in Headers */,
-				C90C83201874B00600E77CDE /* PSTDefines.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2050,7 +2048,8 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = PST;
-				LastUpgradeCheck = 0500;
+				LastTestingUpgradeCheck = 0510;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = CodaFi;
 			};
 			buildConfigurationList = 84C261EB1638AE2B00A64818 /* Build configuration list for PBXProject "Puissant" */;
@@ -2310,11 +2309,6 @@
 				84EECFDC176EC6E800AA826F /* MCOIMAPMessage+PSTExtensions.m in Sources */,
 				84B74E831754748500158CA4 /* NPReachability.m in Sources */,
 				84B74E841754748500158CA4 /* FXKeychain.m in Sources */,
-				84B74E851754748500158CA4 /* FMDatabase.m in Sources */,
-				84B74E861754748500158CA4 /* FMDatabaseAdditions.m in Sources */,
-				84B74E871754748500158CA4 /* FMDatabasePool.m in Sources */,
-				84B74E881754748500158CA4 /* FMDatabaseQueue.m in Sources */,
-				84B74E891754748500158CA4 /* FMResultSet.m in Sources */,
 				84B74E901754748500158CA4 /* MCOAddress+PSTPrettification.m in Sources */,
 				84EECFB1176EB39000AA826F /* MCOAbstractMessage+LEPRecursiveAttachments.m in Sources */,
 				84EECFC8176EB46700AA826F /* MCOAbstractPart+LEPRecursiveAttachments.m in Sources */,
@@ -2389,6 +2383,7 @@
 				C9EE65DB1874B80500949AE2 /* PSTCommitFoldersOperation.m in Sources */,
 				84EECFC7176EB46700AA826F /* MCOAbstractPart+LEPRecursiveAttachments.m in Sources */,
 				C9EE66451874B80500949AE2 /* PSTUpdateActionstepsOperation.m in Sources */,
+				C9C2EB4718E3E644008DA8A9 /* FMDatabase.m in Sources */,
 				84C262901638AF2800A64818 /* NSString+PSTUUID.m in Sources */,
 				C9EE65C31874B80500949AE2 /* PSTAddMessagesUIDsOperation.m in Sources */,
 				C9EE662D1874B80500949AE2 /* PSTRemoveMessageCacheOperation.m in Sources */,
@@ -2438,6 +2433,7 @@
 				C9EE65E91874B80500949AE2 /* PSTDatabaseController+Operations.m in Sources */,
 				C9EE66061874B80500949AE2 /* PSTLevelDBCache.mm in Sources */,
 				C9EE664D1874B80500949AE2 /* PSTUserDefaults.mm in Sources */,
+				C9C2EB4D18E3E644008DA8A9 /* FMDatabaseQueue.m in Sources */,
 				84EECFB0176EB39000AA826F /* MCOAbstractMessage+LEPRecursiveAttachments.m in Sources */,
 				C9EE66291874B80500949AE2 /* PSTRegularExpression.m in Sources */,
 				C9EE66081874B80500949AE2 /* PSTLevelDBMapTable.m in Sources */,
@@ -2456,11 +2452,13 @@
 				84624CFB1673B14A007A8992 /* NSData+PSTCompression.m in Sources */,
 				84E53E8A1694128E0029C2EE /* ABRecord+CFIAdditions.m in Sources */,
 				C9EE660E1874B80500949AE2 /* PSTLocalAttachment.m in Sources */,
+				C9C2EB4B18E3E644008DA8A9 /* FMDatabasePool.m in Sources */,
 				8421B37716B48420006825D8 /* NSArray+StringifyAddress.m in Sources */,
 				C9EE65F81874B80500949AE2 /* PSTIncompleteMessagesUIDOperation.m in Sources */,
 				8421B38D16B494A6006825D8 /* NSApplication+PSTSystemAdditions.m in Sources */,
 				C9EE66351874B80500949AE2 /* PSTSaveLocalDraftOperation.m in Sources */,
 				C9EE65F61874B80500949AE2 /* PSTIMAPMailAccount.m in Sources */,
+				C9C2EB5018E3E644008DA8A9 /* FMResultSet.m in Sources */,
 				C9EE660C1874B80500949AE2 /* PSTLoadCacheOperation.m in Sources */,
 				C9EE65D31874B80500949AE2 /* PSTCache.m in Sources */,
 				C9EE662B1874B80500949AE2 /* PSTRemoveLocalMessagesOperation.m in Sources */,
@@ -2486,15 +2484,11 @@
 				84D6CB5E18344D5900DD3C1B /* NSString+PSTSearch.m in Sources */,
 				84339B221751672A00FCC06C /* NSIndexSet+PSTOperators.m in Sources */,
 				C9EE65E11874B80500949AE2 /* PSTConversationCache.m in Sources */,
+				C9C2EB4918E3E644008DA8A9 /* FMDatabaseAdditions.m in Sources */,
 				C9EE65CF1874B80500949AE2 /* PSTAvatarImageManager.m in Sources */,
-				84339B2F175178E100FCC06C /* FMDatabase.m in Sources */,
-				84339B31175178E100FCC06C /* FMDatabaseAdditions.m in Sources */,
 				C9EE66491874B80500949AE2 /* PSTUpdateMessagesFlagsFromServerOperation.m in Sources */,
-				84339B33175178E100FCC06C /* FMDatabasePool.m in Sources */,
-				84339B35175178E100FCC06C /* FMDatabaseQueue.m in Sources */,
 				C9EE663D1874B80500949AE2 /* PSTSerializableMessage.m in Sources */,
 				84D57EE71887627A0054308C /* PSTSearchQueryTransformer.m in Sources */,
-				84339B38175178E100FCC06C /* FMResultSet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

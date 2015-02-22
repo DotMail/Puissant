@@ -292,7 +292,7 @@ static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 	id result = [self objectForKey:defaultName];
 	
 	if (result == nil) {
-		return (float)nil;
+		return 0.0;
 	}
 	if ([[result class] isKindOfClass:[NSNumber class]]) {
 		return [result floatValue];
@@ -307,7 +307,7 @@ static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 	id result = [self objectForKey:defaultName];
 	
 	if (result == nil) {
-		return (double)nil;
+		return 0.0;
 	}
 	if ([[result class] isKindOfClass:[NSNumber class]]) {
 		return [result doubleValue];

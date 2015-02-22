@@ -223,11 +223,16 @@
 	@weakify(self);
 	return [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
 		@strongify(self);
-		[[self.session idleOperationWithFolder:self.folder.path lastKnownUID:0]start:^(NSError *error) {
+		MCOIMAPIdleOperation *req = [self.session idleOperationWithFolder:self.folder.path lastKnownUID:0];
+		[req start:^(NSError *error) {
 			if (error) {
 				[subscriber sendError:error];
 			}
 			[subscriber sendCompleted];
+		}];
+		
+		return [RACDisposable disposableWithBlock:^{
+			[req cancel];
 		}];
 	}];
 }

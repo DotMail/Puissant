@@ -9,8 +9,7 @@
 	url = https://github.com/specta/expecta.git
 [submodule "External/ReactiveCocoa"]
 	path = External/ReactiveCocoa
-    url = https://github.com/ReactiveCocoa/ReactiveCocoa.git
-    ignore = dirty
+	url = https://github.com/ReactiveCocoa/ReactiveCocoa.git
 [submodule "External/Specta"]
 	path = External/Specta
 	url = https://github.com/specta/specta.git

@@ -36,7 +36,7 @@
 		8481D1F1165FFC58004FA6B5 /* NSString+PSTURL.h in Headers */ = {isa = PBXBuildFile; fileRef = 8481D1EF165FFC58004FA6B5 /* NSString+PSTURL.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8481D1F2165FFC58004FA6B5 /* NSString+PSTURL.m in Sources */ = {isa = PBXBuildFile; fileRef = 8481D1F0165FFC58004FA6B5 /* NSString+PSTURL.m */; };
 		84986DB91743085A001D7E88 /* PSTAddressBookManagerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 84986DB81743085A001D7E88 /* PSTAddressBookManagerSpec.m */; };
-		849896411A999E9D00ED6762 /* .framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8496200D1A999B7B004A186A /* .framework */; };
+		849896C81A99A6AC00ED6762 /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8496200D1A999B7B004A186A /* ReactiveCocoa.framework */; };
 		8499C6E917967325008849BF /* MailCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8442BCAC176E26F100F27E4D /* MailCore.framework */; };
 		8499C6FC17972984008849BF /* PSTMailAccountSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8499C6FB17972984008849BF /* PSTMailAccountSpec.m */; };
 		849C49FF166298DC006C7EBE /* NSData+PSTGZip.h in Headers */ = {isa = PBXBuildFile; fileRef = 849C49FD166298DB006C7EBE /* NSData+PSTGZip.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -483,7 +483,7 @@
 			remoteGlobalIDString = D047261619E49F82006002AA;
 			remoteInfo = "ReactiveCocoa-iOSTests";
 		};
-		849620141A999B80004A186A /* PBXContainerItemProxy */ = {
+		849896C61A99A6A600ED6762 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 849620051A999B7B004A186A /* ReactiveCocoa.xcodeproj */;
 			proxyType = 1;
@@ -990,7 +990,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				849896411A999E9D00ED6762 /* .framework in Frameworks */,
+				849896C81A99A6AC00ED6762 /* ReactiveCocoa.framework in Frameworks */,
 				C9EE65091874B49A00949AE2 /* AddressBook.framework in Frameworks */,
 				84C261F61638AE2B00A64818 /* Cocoa.framework in Frameworks */,
 				8442BCAF176E271400F27E4D /* MailCore.framework in Frameworks */,
@@ -1186,9 +1186,9 @@
 		849620061A999B7B004A186A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8496200D1A999B7B004A186A /* .framework */,
+				8496200D1A999B7B004A186A /* ReactiveCocoa.framework */,
 				8496200F1A999B7B004A186A /* ReactiveCocoa-MacTests.xctest */,
-				849620111A999B7B004A186A /* .framework */,
+				849620111A999B7B004A186A /* ReactiveCocoa.framework */,
 				849620131A999B7B004A186A /* ReactiveCocoa-iOSTests.xctest */,
 			);
 			name = Products;
@@ -2047,7 +2047,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				849620151A999B80004A186A /* PBXTargetDependency */,
+				849896C71A99A6A600ED6762 /* PBXTargetDependency */,
 				84961FE91A9997C8004A186A /* PBXTargetDependency */,
 				84016B9516FE83C3004A012A /* PBXTargetDependency */,
 				84C08A3A16FA7BDF005ABB3E /* PBXTargetDependency */,
@@ -2223,10 +2223,10 @@
 			remoteRef = 849620031A999B4F004A186A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		8496200D1A999B7B004A186A /* .framework */ = {
+		8496200D1A999B7B004A186A /* ReactiveCocoa.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = .framework;
+			path = ReactiveCocoa.framework;
 			remoteRef = 8496200C1A999B7B004A186A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -2237,10 +2237,10 @@
 			remoteRef = 8496200E1A999B7B004A186A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		849620111A999B7B004A186A /* .framework */ = {
+		849620111A999B7B004A186A /* ReactiveCocoa.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = .framework;
+			path = ReactiveCocoa.framework;
 			remoteRef = 849620101A999B7B004A186A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -2533,10 +2533,10 @@
 			name = "mailcore osx";
 			targetProxy = 84961FE81A9997C8004A186A /* PBXContainerItemProxy */;
 		};
-		849620151A999B80004A186A /* PBXTargetDependency */ = {
+		849896C71A99A6A600ED6762 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "ReactiveCocoa-Mac";
-			targetProxy = 849620141A999B80004A186A /* PBXContainerItemProxy */;
+			targetProxy = 849896C61A99A6A600ED6762 /* PBXContainerItemProxy */;
 		};
 		84B74E7B1754745C00158CA4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
